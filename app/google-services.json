@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "520692483193",
+    "project_id": "red-biblioteca",
+    "storage_bucket": "red-biblioteca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520692483193:android:0554528738cff9996f00a8",
+        "android_client_info": {
+          "package_name": "com.example.redlibros"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "520692483193-rs5pupqqunka4tchcip1u65e6aglqq1u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA3ybo1MK-No-mI7cAT9GTQimsR3YMiAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "520692483193-rs5pupqqunka4tchcip1u65e6aglqq1u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
