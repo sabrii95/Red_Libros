@@ -27,6 +27,12 @@ class opciones_login : AppCompatActivity() {
             }
             startActivity(intentRegistro)
         }
+        binding.btnLoginGoogle.setOnClickListener {
+            val intentRegistro = Intent(this, login::class.java).apply {
+                putExtra("Boton","Google" )
+            }
+            startActivity(intentRegistro)
+        }
 
 
     }
