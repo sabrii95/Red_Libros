@@ -2,12 +2,23 @@ package com.example.redlibros
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.preference.PreferenceManager
+import com.example.redlibros.databinding.ActivityLoginBinding
+import com.example.redlibros.databinding.ActivityMainBinding
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthCredential
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -18,91 +29,168 @@ class login : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private val db = FirebaseFirestore.getInstance()
 
+    private lateinit var binding:ActivityLoginBinding
+    lateinit var userdata: User
+    val Google_SIGN_IN=100
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         auth = Firebase.auth
 
-        val usuarioid= findViewById<EditText>(R.id.edt_user)
-        val contraid= findViewById<EditText>(R.id.edt_pass)
-        val btn_loguear = findViewById<Button>(R.id.btn_loguear)
-        val username = findViewById<EditText>(R.id.edt_username)
+        val usuarioid= binding.edtUser
+        val contraid= binding.edtPass
+        val btn_loguear = binding.btnLoguear
+        val usernameid = binding.edtUsername
+
+
+
         val parametros = this.intent.extras
         if (parametros != null) {
             val datos = parametros.getString("Boton")
 
             if (datos == "Registro"){
-                username.setVisibility(View.VISIBLE );
+                usernameid.setVisibility(View.VISIBLE );
+
                 btn_loguear.setOnClickListener {
-                    this.registroUser(usuarioid, contraid)
+                    userdata = User(usuarioid.text.toString(), true, "https://image.flaticon.com/icons/png/512/681/681392.png", usernameid.text.toString(),contraid.text.toString())
+                    this.registroUser(userdata)
                 }
             }
 
             if (datos == "IniciarSesion") {
-                username.setVisibility(View.GONE);
+                usernameid.setVisibility(View.GONE);
+                val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+                val email = prefs.getString("email","")
+                val pass = prefs.getString("pass","")
+                val username = prefs.getString("username", "")
+                if(email!= "" && pass!= "") {
+                    usuarioid.setText(email)
+                    contraid.setText(pass)
+
+                }
                 btn_loguear.setOnClickListener {
-                    this.loguear(usuarioid, contraid)
+
+                    userdata = User(usuarioid.text.toString(), true, "", "",contraid.text.toString())
+                    this.loguear(userdata)
                 }
             }
+            if (datos == "Google") {
+                val gooleConfig= GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build()
+                val googleClient = GoogleSignIn.getClient(this, gooleConfig)
+                startActivityForResult(googleClient.signInIntent, Google_SIGN_IN)
+                googleClient.signOut()
 
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Google_SIGN_IN ) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                Log.d("activity result", "firebaseAuthWithGoogle:" + account.id)
+                if (account != null){
+                    val credential = GoogleAuthProvider.getCredential(account.idToken,null)
+                    auth.signInWithCredential(credential).addOnCompleteListener(this) { it ->
+                        if (it.isSuccessful){
+                            val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+                            val user = FirebaseAuth.getInstance().currentUser
+                            val intent = Intent(this, MainActivity::class.java)
+                                var datosusuario = prefs.edit()
+                                datosusuario.putString("username", user!!.displayName)
+                                datosusuario.putString("image", user.photoUrl.toString() )
+                                datosusuario.putString("email", user.email)
+                                datosusuario.apply()
+
+                            startActivity(intent)
+                            finishAffinity()
+
+                        }
+                        else{
+                            Toast.makeText(
+                                baseContext,
+                                "Authentication failed."+task.isSuccessful,
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        }
+                    }
+
+                }
+
+            } catch (e: ApiException) {
+                // Google Sign In failed, update UI appropriately
+                Log.w("no se ejecuto activity result", "Google sign in failed", e)
+            }
+        }
+    }
+    fun loguear(user: User){
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        if(user.email!= "" || user.pass != "") {
+            var userRef = db.collection("User").document(user.email).get()
+                .addOnSuccessListener { document ->
+                    auth.signInWithEmailAndPassword(user.email, user.pass)
+                        .addOnCompleteListener(this) { task ->
+                            if (task.isSuccessful) {
+
+
+                                val intent = Intent(this, MainActivity::class.java).apply {
+
+                                    var datosusuario = prefs.edit()
+                                    datosusuario.putString("username", document.data?.get("username").toString())
+                                    datosusuario.putString("image", document.data?.get("image").toString() )
+                                    datosusuario.putString("email", user.email)
+                                    datosusuario.putString("pass", user.pass)
+                                    datosusuario.apply()
+
+                                }
+                                startActivity(intent)
+                                finishAffinity()
+
+
+                            } else {
+                                Toast.makeText(
+                                    baseContext,
+                                    "Authentication failed."+task.isSuccessful,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+
+                }
         }
 
     }
-    fun loguear(usuarioid: EditText,contraid: EditText){
-        /*var userdata = User(usuarioid.text.toString(), true, "", "sabrina")
-       if(usuarioid.text.isNotEmpty() && contraid.text.isNotEmpty()){
-           auth.signInWithEmailAndPassword(usuarioid.text.toString(), contraid.text.toString())
-               .addOnCompleteListener(this) { task ->
-                   if (task.isSuccessful) {
-                       // Sign in success, update UI with the signed-in user's information
-                       val user = auth.currentUser
-                       val intent = Intent(this, MainActivity::class.java).apply {
-                           putExtra("dataUser","valor" )
-                       }
-                       startActivity(intent)
-                       finish();
-
-                   } else {
-                       // If sign in fails, display a message to the user.
-                       Toast.makeText(baseContext, "Authentication failed."+task.isSuccessful,Toast.LENGTH_SHORT).show()
-                   }*/
-          var userRef = db.collection("User").document(usuarioid.text.toString()).get()
-               .addOnSuccessListener {
-                       document ->
-                   auth.signInWithEmailAndPassword(usuarioid.text.toString(), contraid.text.toString())
-                       .addOnCompleteListener(this) { task ->
-                           if (task.isSuccessful) {
-                               // Sign in success, update UI with the signed-in user's information
-                               val user = auth.currentUser
-                               var userdata = User(usuarioid.text.toString(), true, "", "sabrina")
-                               val intent = Intent(this, MainActivity::class.java).apply {
-                                   putExtra("dataUser",userdata)
-                               }
-                               startActivity(intent)
-                               finish();
-
-
-                           } else {
-                               // If sign in fails, display a message to the user.
-                               Toast.makeText(baseContext, "Authentication failed.",Toast.LENGTH_SHORT).show()
-                           }
-                       }
-
-
-        }
-
-    }
-    fun registroUser(usuarioid: EditText, contraid:EditText){
-
-        if(usuarioid.text.isNotEmpty() && contraid.text.isNotEmpty()) {
-            var userdata = User(usuarioid.text.toString(), true, "", "sabrina")
-            auth.createUserWithEmailAndPassword(usuarioid.text.toString(), contraid.text.toString())
+    fun registroUser(user: User){
+        Toast.makeText(
+            baseContext,
+            "usuario"+user.email+"contr"+user.pass,
+            Toast.LENGTH_SHORT
+        ).show()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        if(user.email!= "" || user.pass != "") {
+            auth.createUserWithEmailAndPassword(user.email, user.pass)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         //val datosUser = auth.currentUser
-                        this.ingresarUser(userdata)
+                        this.ingresarUser(user)
                         val intent = Intent(this, MainActivity::class.java).apply {
-                            putExtra("dataUser", userdata )
+                            var datosusuario = prefs.edit()
+                            datosusuario.putString("username", user.userName)
+                            datosusuario.putString("email", user.email)
+                            datosusuario.putString("pass", user.pass)
+                            datosusuario.putString("image", user.image)
+                            datosusuario.apply()
                         }
                         startActivity(intent)
                         finish();
@@ -110,7 +198,7 @@ class login : AppCompatActivity() {
                     } else {
                         Toast.makeText(
                             this,
-                            "Resgistro failed." + usuarioid.text.toString()+task + " contra " + contraid.text.toString(),
+                            "Resgistro failed." + user.email+""+ " contra " + user.pass,
                             Toast.LENGTH_SHORT
                         ).show()
 
@@ -134,6 +222,7 @@ class login : AppCompatActivity() {
         )
 
     }
+
 
 
 }
