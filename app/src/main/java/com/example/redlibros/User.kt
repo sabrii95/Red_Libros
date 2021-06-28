@@ -7,7 +7,8 @@ data class User(
     val email: String,
     val enable: Boolean,
     val image: String,
-    val userName: String
+    val userName: String,
+    val pass: String
 ): Parcelable {
 
 }
