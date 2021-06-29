@@ -9,8 +9,13 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
+            android:id="@+id/nav_BuscarLibroQR"
+            android:icon="@drawable/pila_libros"
+            android:title="@string/menu_buscarLibrosQR" />
+        <item
             android:id="@+id/nav_cerrarSesion"
             android:icon="@drawable/cerrar_sesion"
             android:title="@string/menu_cerrarSesion" />
+
     </group>
 </menu>
