@@ -95,8 +95,8 @@ class FragmentBuscar_Libro_qr : Fragment() {
 
 
         binding.txtTituloLibro.setText(title.toUpperCase())
-        binding.txtDescripcionLibro.setText((description_sin_caractere_especiales.toString()))
-        binding.txtAutorLibro.setText(autor_sin_caracteres_eseciales.toString())
+        binding.txtDescripcionLibro.setText((autor.toString()))
+        binding.txtAutorLibro.setText(autor.toString())
         binding.txtAOEdicion.setText(feha.toString())
         binding.txtEditorialLibro.setText(publisher)
         Glide.with(contexto).load(image).into(binding.imageTapaLibro)

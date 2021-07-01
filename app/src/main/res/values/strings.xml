@@ -6,6 +6,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
     <!--Opciones de Logueo   -->
     <string name="opcion_Iniciar_Sesion">Iniciar Sesion</string>
     <string name="opcion_Registrarse">Registrarse</string>
@@ -19,6 +20,16 @@
     <string name="menu_home">Home</string>
     <string name="menu_cerrarSesion">Cerrar Sesión</string>
     <string name="menu_buscarLibrosQR">Buscar Libros</string>
+    <!--Fin de Opciones de Menu   -->
+
+    <string name="search_book">Buscar Otro Libro</string>
+
+    <!--Hint formulario de registro, iniciar sesion -->
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="user_name">Nombre de Usuario</string>
+
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
