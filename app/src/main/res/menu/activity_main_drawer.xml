@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
+            android:id="@+id/nav_miCuenta"
+            android:icon="@drawable/ic_mi_cuenta"
+            android:title="@string/menu_mi_cuenta" />
+        <item
             android:id="@+id/nav_cerrarSesion"
             android:icon="@drawable/cerrar_sesion"
             android:title="@string/menu_cerrarSesion" />
