@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_cerrarSesion
+                R.id.nav_home, R.id.nav_cerrarSesion, R.id.nav_miCuenta
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -95,7 +95,6 @@ class MainActivity : AppCompatActivity() {
         FirebaseAuth.getInstance().signOut()
         val intent = Intent(this, opciones_login::class.java)
         finish()
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -108,6 +107,12 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
                 this.cerrarSesion()
+                true
+            }
+            R.id.nav_miCuenta -> {
+                val intent = Intent(this, MyAccount::class.java)
+                startActivity(intent)
+                finishAffinity()
                 true
             }
             else -> super.onOptionsItemSelected(item)
