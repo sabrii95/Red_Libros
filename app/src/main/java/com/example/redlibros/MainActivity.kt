@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
 
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -72,7 +73,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_BuscarLibroQR, R.id.nav_LibrosDeseos
+
+                R.id.nav_home,R.id.nav_miCuenta, R.id.nav_BuscarLibroQR, R.id.nav_LibrosDeseos
+
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -116,8 +119,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun  cerrarSesion(){
         FirebaseAuth.getInstance().signOut()
         val intent = Intent(this, opciones_login::class.java)
+
         startActivity(intent)
         finishAffinity()
+
 
     }
 
@@ -136,6 +141,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.nav_LibrosDeseos->{
                 findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.nav_LibrosDeseos)
+            }
+            R.id.nav_miCuenta -> {
+                val intent = Intent(this, MyAccount::class.java)
+                startActivity(intent)
+                finishAffinity()
+                true
             }
             else -> super.onOptionsItemSelected(item)
         }

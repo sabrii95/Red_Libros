@@ -14,10 +14,30 @@
     <string name="opcion_Facebook">Inicio con Facebook</string>
     <string name="boton_siguiente">Ingresar</string>
 
+
+    <string name="txt_username">Ingrese Usuario</string>
+    <string name="txt_name">Ingrese Nombre Completo</string>
+    <string name="txt_email">Ingrese Email</string>
+    <string name="txt_password">Ingrese Password</string>
+    <string name="btn_save">Guardar</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="btn_close_account">Cerrar Cuenta</string>
+    <string name="lbl_basic_info">Información Básica</string>
+    <string name="lbl_access_data">Datos De Acceso</string>
+    <string name="lbl_edit_data">Modo De Edición</string>
+    <string name="lbl_cerrar_cuenta">Cerrar Cuenta</string>
+
+
+
+
+
+
     <!--Fin de Opciones de Logueo   -->
+
 
     <!--Opciones de Menu   -->
     <string name="menu_home">Home</string>
+    <string name="menu_mi_cuenta">Mi Cuenta</string>
     <string name="menu_cerrarSesion">Cerrar Sesión</string>
     <string name="menu_buscarLibrosQR">Buscar Libros</string>
     <string name="menu_LibrosDeseos">Lista Deseos</string>
