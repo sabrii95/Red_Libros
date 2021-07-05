@@ -138,27 +138,9 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
         return true
     }
 
-    /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-    }
-
-*/
-
-
     override fun onMapReady(map: GoogleMap) {
             googleMap = map;
 
-
-
-
     }
-
-
-
-
-
-
-
-
 
 }
