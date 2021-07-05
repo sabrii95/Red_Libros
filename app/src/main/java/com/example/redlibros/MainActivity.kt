@@ -1,13 +1,19 @@
 package com.example.redlibros
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuView.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -18,6 +24,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.example.redlibros.databinding.ActivityMainBinding
+import com.google.android.gms.location.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
@@ -32,6 +39,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var auth: FirebaseAuth
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,11 +88,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var username = binding.navView.getHeaderView(0).findViewById<MaterialTextView>(R.id.txt_user_name)
         var image = binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.image_user)
 
+
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         mail.text = prefs.getString("email","")
         username.text = prefs.getString("username","")
         Glide.with(this).load(prefs.getString("image","").toString()).into(image)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        checLocationpermission()
+
+
 
     }
 
@@ -131,5 +145,57 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
+    private fun checLocationpermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            //El permiso no está aceptado.
+            requestLocationPermission()
+        }
+    }
+    fun requestLocationPermission(){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            //El usuario ya ha rechazado el permiso anteriormente, debemos informarle que vaya a ajustes.
+            Toast.makeText(this, "El usuario ya ha rechazado lo permisos", Toast.LENGTH_SHORT).show()
+        } else {
+            //El usuario nunca ha aceptado ni rechazado, así que le pedimos que acepte el permiso.
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                0)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode==0){
+            if(grantResults.isNotEmpty() &&  grantResults[0] ==PackageManager.PERMISSION_GRANTED){
+                if (ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+
+                    return
+                }
+
+
+            }
+
+                    Toast.makeText(this, "Permiso cencedido", Toast.LENGTH_SHORT).show()
+
+        }
+        else{
+                Toast.makeText(this, "Permiso denegado", Toast.LENGTH_SHORT).show()
+            }
+
+    }
+
+
+
+
+
 }
 

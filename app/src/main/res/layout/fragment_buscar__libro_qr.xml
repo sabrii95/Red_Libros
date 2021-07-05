@@ -15,24 +15,15 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="76dp"
-                android:src="@drawable/favoritos"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_año_edicion" />
 
             <TextView
 
@@ -105,17 +96,26 @@
                 app:layout_constraintTop_toBottomOf="@+id/image_tapaLibro" />
 
             <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="wrap_content"
+                android:id="@+id/btn_guardar_libro"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="62dp"
                 android:layout_marginTop="8dp"
                 android:backgroundTint="@color/material_on_primary_disabled"
-                android:src="@drawable/disquete"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton"
-                app:layout_constraintHorizontal_bias="0.52"
+                android:src="@drawable/disco_flexible"
+                app:layout_constraintEnd_toStartOf="@+id/btn_libro_deseado"
                 app:layout_constraintStart_toEndOf="@+id/image_tapaLibro"
                 app:layout_constraintTop_toBottomOf="@+id/txt_año_edicion" />
+
+            <ImageButton
+                android:id="@+id/btn_libro_deseado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="28dp"
+                android:src="@drawable/favorito"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_año_edicion" />
+
 
             <Button
                 android:id="@+id/btn_search_book"

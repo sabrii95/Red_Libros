@@ -1,11 +1,15 @@
 package com.example.redlibros
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.example.redlibros.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -22,7 +26,9 @@ import com.google.firebase.ktx.Firebase
 class login : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private val db = FirebaseFirestore.getInstance()
-
+    companion object {
+        const val REQUEST_CODE_LOCATION = 0
+    }
     private lateinit var binding:ActivityLoginBinding
     lateinit var userdata: User
     val Google_SIGN_IN=100
@@ -73,7 +79,8 @@ class login : AppCompatActivity() {
                 }
             }
             if (datos == "Google") {
-                contraid.setVisibility(View.VISIBLE )
+
+
                 val gooleConfig= GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(getString(R.string.default_web_client_id))
                     .requestEmail()
@@ -81,6 +88,10 @@ class login : AppCompatActivity() {
                 val googleClient = GoogleSignIn.getClient(this, gooleConfig)
                 startActivityForResult(googleClient.signInIntent, Google_SIGN_IN)
                 googleClient.signOut()
+                contraid.setVisibility(View.GONE )
+                binding.btnLoguear.setVisibility(View.GONE)
+                binding.edtUser.setEnabled(false)
+                binding.edtUsername.setEnabled(false)
 
             }
         }
@@ -99,9 +110,17 @@ class login : AppCompatActivity() {
                         if (it.isSuccessful){
                             val prefs = PreferenceManager.getDefaultSharedPreferences(this)
                             val user = FirebaseAuth.getInstance().currentUser
+                            val dataUser = User (user?.email.toString(), true, user?.photoUrl.toString(),
+                                user!!.displayName.toString(), ""  )
+                            ingresarUser(dataUser)
+
+
+
+                            binding.edtUser.setText(user?.email)
+                            binding.edtUsername.setText(user!!.displayName)
                             val intent = Intent(this, MainActivity::class.java)
                                 val datosusuario = prefs.edit()
-                              //  binding.edtUser.text =  user!!.displayName
+
                                 datosusuario.putString("username", user!!.displayName)
                                 datosusuario.putString("image", user.photoUrl.toString() )
                                 datosusuario.putString("email", user.email)
@@ -198,7 +217,7 @@ class login : AppCompatActivity() {
         }
 
     }
-
+    // insert Data Base
     fun ingresarUser(user_data: User) {
 
         db.collection("User").document(user_data.email).set(
@@ -209,6 +228,9 @@ class login : AppCompatActivity() {
         )
 
     }
+
+
+
 
 
 
