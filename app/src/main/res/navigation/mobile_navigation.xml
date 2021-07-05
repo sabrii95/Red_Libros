@@ -9,12 +9,38 @@
         android:id="@+id/nav_home"
         android:name="com.example.redlibros.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_detail_fragment"
+            app:destination="@id/detail_fragment" />
+    </fragment>
+
     <fragment
-        android:id="@+id/nav_cerrarSesion"
-        android:name="com.example.redlibros.ui.home.FragmentCerrarSesion"
-        android:label="fragment_cerrar_sesion"
-        tools:layout="@layout/fragment_cerrar_sesion" />
+        android:id="@+id/nav_BuscarLibroQR"
+        android:name="com.example.redlibros.ui.home.FragmentBuscar_Libro_qr"
+        android:label="Resultado de Busqueda"
+        tools:layout="@layout/fragment_buscar__libro_qr" />
+    <fragment
+        android:id="@+id/detail_fragment"
+        android:name="com.example.redlibros.ui.home.Detail_fragment"
+        android:label="fragment_detail_fragment"
+        tools:layout="@layout/fragment_detail_fragment" >
+        <action
+            android:id="@+id/action_detail_fragment_to_nav_home"
+            app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_detail_fragment_to_nav_LibrosDeseos2"
+            app:destination="@id/nav_LibrosDeseos" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_LibrosDeseos"
+        android:name="com.example.redlibros.ui.home.FragmentDeseos"
+        android:label="fragment_deseos"
+        tools:layout="@layout/fragment_deseos" >
+        <action
+            android:id="@+id/action_nav_LibrosDeseos_to_detail_fragment2"
+            app:destination="@id/detail_fragment" />
+    </fragment>
 
 
 </navigation>
