@@ -11,7 +11,7 @@ class QueryFirestore {
 
      fun addUserBook(libro: VolumeInfo, email: String, array: String) {
         if (libro.title.toString() != "" && email!= null) {
-            this.validarUser(email, array).addOnSuccessListener {document ->
+            this.bookforUser(email, array).addOnSuccessListener {document ->
                 if (document.documents.size == 0){
                     this.seearchBookDataBase(libro).addOnCompleteListener { Elementolibro->
                         if(Elementolibro.isSuccessful) {
@@ -35,7 +35,7 @@ class QueryFirestore {
         }
 
     }
-    fun validarUser(email: String, array: String): Task<QuerySnapshot> {
+    fun bookforUser(email: String, array: String): Task<QuerySnapshot> {
         return db.collection("Libros")
             .whereArrayContains(array,email )
             .get()

@@ -28,6 +28,18 @@
         <action
             android:id="@+id/action_detail_fragment_to_nav_home"
             app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_detail_fragment_to_nav_LibrosDeseos2"
+            app:destination="@id/nav_LibrosDeseos" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_LibrosDeseos"
+        android:name="com.example.redlibros.ui.home.FragmentDeseos"
+        android:label="fragment_deseos"
+        tools:layout="@layout/fragment_deseos" >
+        <action
+            android:id="@+id/action_nav_LibrosDeseos_to_detail_fragment2"
+            app:destination="@id/detail_fragment" />
     </fragment>
 
 

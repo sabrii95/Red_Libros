@@ -3,9 +3,7 @@ package com.example.redlibros
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
-import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
@@ -26,7 +24,6 @@ import com.bumptech.glide.Glide
 import com.example.redlibros.databinding.ActivityMainBinding
 import com.google.android.gms.location.*
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
 
@@ -52,10 +49,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+
         drawerLayout = binding.drawerLayout
 
         toggle = ActionBarDrawerToggle(
@@ -78,7 +72,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_BuscarLibroQR
+                R.id.nav_home, R.id.nav_BuscarLibroQR, R.id.nav_LibrosDeseos
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -139,6 +133,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_cerrarSesion -> {
                 this.cerrarSesion()
 
+            }
+            R.id.nav_LibrosDeseos->{
+                findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.nav_LibrosDeseos)
             }
             else -> super.onOptionsItemSelected(item)
         }

@@ -20,6 +20,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_cerrarSesion">Cerrar Sesión</string>
     <string name="menu_buscarLibrosQR">Buscar Libros</string>
+    <string name="menu_LibrosDeseos">Lista Deseos</string>
     <!--Fin de Opciones de Menu   -->
 
     <string name="search_book">Buscar Otro Libro</string>

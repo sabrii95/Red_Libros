@@ -16,7 +16,6 @@ import com.example.redlibros.Model.BookResponse
 import com.example.redlibros.Servicio.ApiBooks
 import com.example.redlibros.Servicio.CallApiBook
 import com.example.redlibros.databinding.FragmentBuscarLibroQrBinding
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.integration.android.IntentIntegrator
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,7 +23,7 @@ import retrofit2.Callback
 
 class FragmentBuscar_Libro_qr : Fragment() {
 
-    private val db = FirebaseFirestore.getInstance()
+    //private val db = FirebaseFirestore.getInstance()
     private var book: BookResponse ? = null
     private var _binding: FragmentBuscarLibroQrBinding? = null
     private val binding get() = _binding!!

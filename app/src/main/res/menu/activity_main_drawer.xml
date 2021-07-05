@@ -13,6 +13,10 @@
             android:icon="@drawable/pila_libros"
             android:title="@string/menu_buscarLibrosQR" />
         <item
+            android:id="@+id/nav_LibrosDeseos"
+            android:icon="@drawable/estrella"
+            android:title="@string/menu_LibrosDeseos" />
+        <item
             android:id="@+id/nav_cerrarSesion"
             android:icon="@drawable/cerrar_sesion"
             android:title="@string/menu_cerrarSesion" />
