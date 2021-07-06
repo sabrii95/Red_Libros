@@ -1,6 +1,8 @@
 package com.example.redlibros.ui.home
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.redlibros.Recycler.Item
 import com.example.redlibros.Recycler.ItemAdapter
 import com.example.redlibros.databinding.FragmentHomeBinding
@@ -35,7 +38,8 @@ class HomeFragment : Fragment(), ItemAdapter.ItemClickListener {
         val root: View = binding.root
 
         recycler = binding.mRecyclerView
-        recycler.layoutManager = LinearLayoutManager(context)
+//        recycler.layoutManager = LinearLayoutManager(context)
+        recycler.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         llenarLista()
         val adapter = ItemAdapter(this.lista, this)
         recycler.adapter = adapter

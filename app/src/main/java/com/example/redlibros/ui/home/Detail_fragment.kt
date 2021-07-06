@@ -1,14 +1,23 @@
 package com.example.redlibros.ui.home
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ScrollView
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.redlibros.DataBase.QueryFirestore
 import com.example.redlibros.R
 import com.example.redlibros.databinding.FragmentDetailFragmentBinding
+import com.example.redlibros.match.MatchSubItem
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_match.*
 
 
 class Detail_fragment : Fragment() {
@@ -41,6 +50,31 @@ class Detail_fragment : Fragment() {
             .placeholder(R.drawable.missingbook)
             .error(R.drawable.missingbook)
             .into(binding.vistaImageView)
+
+        var usersPerteneciente: List<String> = emptyList()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val emailPref = prefs.getString("email","")
+        QueryFirestore().bookforUser(emailPref.toString(), "userDeseo").addOnSuccessListener{ document ->
+
+            val bookDeseo = document.documents.filter { doc-> doc.get("title") == name }
+
+            for (document in bookDeseo) {
+                usersPerteneciente = document.get("usersPerteneciente") as List<String>
+            }
+
+            if(usersPerteneciente.size > 0) {
+                binding.subtitulo.visibility = View.VISIBLE
+            }
+
+            val userAdapter = MatchSubItem(usersPerteneciente)
+            binding.rvUsers.layoutManager = LinearLayoutManager(context)
+            binding.rvUsers.adapter = userAdapter
+
+
+        }
+
+
+
         return binding.root
     }
 

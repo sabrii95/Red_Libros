@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="secondFrag" type="id" />
+    <item name="vistaImageView" type="id" />
+    <item name="nameTextView" type="id" />
+    <item name="authorTextView" type="id" />
+    <item name="descriptionTextView" type="id" />
+    <item name="nameTextView2" type="id" />
+</resources>
