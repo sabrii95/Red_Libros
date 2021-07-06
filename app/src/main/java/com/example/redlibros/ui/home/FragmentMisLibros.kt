@@ -9,14 +9,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.redlibros.DataBase.QueryFirestore
 import com.example.redlibros.R
 import com.example.redlibros.Recycler.Item
 import com.example.redlibros.Recycler.ItemAdapter
+import com.example.redlibros.databinding.FragmentHomeBinding
 import com.example.redlibros.databinding.FragmentMisLibrosBinding
 
 class FragmentMisLibros : Fragment(),ItemAdapter.ItemClickListener {
-    private var _binding: FragmentMisLibrosBinding? = null
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit  var recycler : RecyclerView
     private lateinit  var lista : MutableList<Item>
@@ -32,11 +34,11 @@ class FragmentMisLibros : Fragment(),ItemAdapter.ItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentMisLibrosBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         recycler = binding.mRecyclerView
-        recycler.layoutManager = LinearLayoutManager(context)
+        recycler.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         llenarLista()
         return root
     }
