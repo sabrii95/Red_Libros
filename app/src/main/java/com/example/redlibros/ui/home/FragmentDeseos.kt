@@ -1,6 +1,7 @@
 package com.example.redlibros.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,14 +10,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.redlibros.DataBase.QueryFirestore
 import com.example.redlibros.R
 import com.example.redlibros.Recycler.Item
 import com.example.redlibros.Recycler.ItemAdapter
 import com.example.redlibros.databinding.FragmentDeseosBinding
+import com.example.redlibros.databinding.FragmentDetailFragmentBinding
+import com.example.redlibros.databinding.FragmentHomeBinding
+
 
 class FragmentDeseos : Fragment() , ItemAdapter.ItemClickListener{
-    private var _binding: FragmentDeseosBinding? = null
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
     private lateinit  var recycler : RecyclerView
@@ -31,11 +36,11 @@ class FragmentDeseos : Fragment() , ItemAdapter.ItemClickListener{
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentDeseosBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         recycler = binding.mRecyclerView
-        recycler.layoutManager = LinearLayoutManager(context)
+        recycler.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         llenarLista()
 
 

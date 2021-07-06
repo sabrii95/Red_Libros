@@ -62,6 +62,8 @@
     <string name="buscar_libro">Buscar</string>
 
 
+    <string name="presentacion_usuarios">Debajo vas a encontrar los usuarios que tienen el libro que queres</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
