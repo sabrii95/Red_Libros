@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         appBarConfiguration = AppBarConfiguration(
             setOf(
 
-                R.id.nav_home,R.id.nav_miCuenta, R.id.nav_BuscarLibroQR, R.id.nav_LibrosDeseos
+                R.id.nav_home,R.id.nav_fragmentCount, R.id.nav_BuscarLibroQR, R.id.nav_LibrosDeseos
 
             ), drawerLayout
         )
@@ -142,11 +142,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_LibrosDeseos->{
                 findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.nav_LibrosDeseos)
             }
-            R.id.nav_miCuenta -> {
-                val intent = Intent(this, MyAccount::class.java)
+            R.id.nav_fragmentMisLibros->{
+                findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.nav_fragmentMisLibros)
+            }
+            R.id.nav_fragmentCount -> {
+                findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.nav_fragmentCount)
+                /*val intent = Intent(this, MyAccount::class.java)
                 startActivity(intent)
                 finishAffinity()
-                true
+                true*/
             }
             else -> super.onOptionsItemSelected(item)
         }

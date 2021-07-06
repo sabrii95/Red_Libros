@@ -28,10 +28,6 @@
     <string name="lbl_cerrar_cuenta">Cerrar Cuenta</string>
 
 
-
-
-
-
     <!--Fin de Opciones de Logueo   -->
 
 
@@ -41,6 +37,7 @@
     <string name="menu_cerrarSesion">Cerrar Sesión</string>
     <string name="menu_buscarLibrosQR">Buscar Libros</string>
     <string name="menu_LibrosDeseos">Lista Deseos</string>
+    <string name="menu_MisLibros">Mis Libros</string>
     <!--Fin de Opciones de Menu   -->
 
     <string name="search_book">Buscar Otro Libro</string>
@@ -60,6 +57,10 @@
     <string name="description">Esta serie, basada en los libros de George R.R. Martin, muestra la competencia entre familias nobles de siete reinos de Westeros, cuya finalidad es ganar el control sobre el Trono de Hierro.</string>
     <string name="todo">TODO</string>
     <string name="title_activity_main">Libros</string>
+    <!--Pantalla de home  -->
+    <string name="libro">Ingrese el nombre del libro</string>
+    <string name="buscar_libro">Buscar</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

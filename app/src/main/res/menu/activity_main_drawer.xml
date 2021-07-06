@@ -8,11 +8,7 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
-        <item
 
-            android:id="@+id/nav_miCuenta"
-            android:icon="@drawable/ic_mi_cuenta"
-            android:title="@string/menu_mi_cuenta" />
          <item
             android:id="@+id/nav_BuscarLibroQR"
             android:icon="@drawable/pila_libros"
@@ -21,6 +17,20 @@
             android:id="@+id/nav_LibrosDeseos"
             android:icon="@drawable/estrella"
             android:title="@string/menu_LibrosDeseos" />
+        <item
+            android:id="@+id/nav_fragmentMisLibros"
+            android:icon="@drawable/mis_libros"
+            android:title="@string/menu_MisLibros" />
+
+
+    </group>
+    <group android:checkableBehavior="single">
+
+        <item
+
+            android:id="@+id/nav_fragmentCount"
+            android:icon="@drawable/ic_mi_cuenta"
+            android:title="@string/menu_mi_cuenta" />
 
         <item
             android:id="@+id/nav_cerrarSesion"

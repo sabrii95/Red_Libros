@@ -15,8 +15,6 @@ import com.example.redlibros.Recycler.Item
 import com.example.redlibros.Recycler.ItemAdapter
 import com.example.redlibros.databinding.FragmentDeseosBinding
 
-
-
 class FragmentDeseos : Fragment() , ItemAdapter.ItemClickListener{
     private var _binding: FragmentDeseosBinding? = null
     private val binding get() = _binding!!
