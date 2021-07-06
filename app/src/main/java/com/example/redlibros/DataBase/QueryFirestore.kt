@@ -10,11 +10,12 @@ class QueryFirestore {
     val db = FirebaseFirestore.getInstance()
 
      fun addUserBook(libro: VolumeInfo, email: String, array: String) {
-        if (libro.title.toString() != "" && email!= null) {
-            this.bookforUser(email, array).addOnSuccessListener {document ->
-                if (document.documents.size == 0){
-                    this.seearchBookDataBase(libro).addOnCompleteListener { Elementolibro->
-                        if(Elementolibro.isSuccessful) {
+        if (libro.title.toString() != "" && email!= "") {
+           this.seearchBookDataBase(libro).addOnSuccessListener { Elementolibro->
+                if(Elementolibro.size() > 0) {
+                    this.bookforUser(email, array).addOnSuccessListener {document ->
+                        if (document.documents.size == 0){
+
                             db.collection("Libros").document(libro.title.toString())
                                 .update (
                                     array , FieldValue.arrayUnion( email  )
@@ -22,12 +23,13 @@ class QueryFirestore {
 
                         }
                         else {
-                            saveBookDataBase(libro, email, array )
+                            this.removeUser(libro, email, array)
                         }
                     }
                 }
                 else{
-                    this.removeUser(libro, email, array)
+
+                    saveBookDataBase(libro, email, array )
 
                 }
             }
@@ -43,7 +45,7 @@ class QueryFirestore {
     }
     fun seearchBookDataBase(libro: VolumeInfo): Task<QuerySnapshot>{
         return db.collection("Libros")
-            .whereEqualTo("title", libro.title)
+            .whereEqualTo("title", libro.title.toString())
             .limit(1)
             .get()
 
@@ -56,14 +58,15 @@ class QueryFirestore {
     }
 
 
-    fun saveBookDataBase(libro: VolumeInfo, user: String, array: String) {
-        db.collection("Libros").document(libro.title.toString() ).set(
+    fun saveBookDataBase(libro: VolumeInfo, user: String, array: String): Task<Void> {
+        return db.collection("Libros").document(libro.title.toString() ).set(
             hashMapOf(
                 "title" to libro.title,
                 "authors" to libro.authors,
                 "description" to libro.description,
                 "publisher" to libro.publisher,
                 "publishedDate" to libro.publishedDate ,
+                "image" to libro.imageLinks?.thumbnail,
                 array to listOf(user)
 
             )
