@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redlibros.DataBase.QueryFirestore
+import com.example.redlibros.Model.ImageLinks
+import com.example.redlibros.Model.VolumeInfo
 import com.example.redlibros.R
 import com.example.redlibros.databinding.FragmentDetailFragmentBinding
 import com.example.redlibros.match.MatchSubItem
@@ -74,6 +76,20 @@ class Detail_fragment : Fragment() {
 
         }
 
+        val vol = VolumeInfo(name, listOf(author), "", "", des, emptyList(), "", "", ImageLinks("","","","","",""), "")
+
+        binding.btnDeseo.setOnClickListener {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val emailPref = prefs.getString("email","")
+            QueryFirestore().addUserBook( vol, emailPref.toString(), "userDeseo")
+
+        }
+        binding.btnTengo.setOnClickListener {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val emailPref = prefs.getString("email","")
+            QueryFirestore().addUserBook( vol, emailPref.toString(), "usersPerteneciente")
+
+        }
 
 
         return binding.root

@@ -63,6 +63,23 @@
                 android:text="@string/author"
                 android:textColor="@color/black" />
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lo quiero"
+                android:id="@+id/btnDeseo"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@id/authorTextView"
+                android:layout_toEndOf="@id/posterCardView"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lo tengo"
+                android:id="@+id/btnTengo"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@id/authorTextView"
+                android:layout_toEndOf="@id/btnDeseo" />
             <ScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
