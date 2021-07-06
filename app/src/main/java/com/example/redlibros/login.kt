@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.example.redlibros.databinding.ActivityLoginBinding
+import com.example.redlibros.match.Match
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -156,7 +157,7 @@ class login : AppCompatActivity() {
                     auth.signInWithEmailAndPassword(user.email, user.pass)
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
-                                val intent = Intent(this, MainActivity::class.java)
+                                val intent = Intent(this, Match::class.java)
                                     document.id
                                     val datosusuario = prefs.edit()
                                     datosusuario.putString("username", document.data?.get("username").toString())
@@ -193,7 +194,7 @@ class login : AppCompatActivity() {
                     if (task.isSuccessful) {
                         //val datosUser = auth.currentUser
                         this.ingresarUser(user)
-                        val intent = Intent(this, MainActivity::class.java).apply {
+                        val intent = Intent(this, Match::class.java).apply {
                             val datosusuario = prefs.edit()
                             datosusuario.putString("username", user.userName)
                             datosusuario.putString("email", user.email)
