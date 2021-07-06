@@ -14,9 +14,12 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.example.redlibros.databinding.FragmentUbicacionBinding
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 
 class fragment_ubicacion : Fragment(), OnMapReadyCallback {
@@ -31,6 +34,10 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
         const val REQUEST_CODE_LOCATION = 0
     }
 
+    var latitud: Double = 0.0
+    var longitude: Double = 0.0
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +50,19 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
     ): View? {
         _binding = FragmentUbicacionBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        createLocationRequest()
+        createLocationCallback()
+
+        if (checkPermission()) {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    if (location != null) {
+                        showLocation(location)
+                    }
+                }
+        }
+
         // Inflate the layout for this fragment
         return root
     }
@@ -64,7 +84,7 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
 
     private fun createLocationRequest() {
         locationRequest = LocationRequest.create().apply {
-            interval = 10000
+            interval = 3000
             fastestInterval = 5000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
@@ -82,24 +102,19 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        createLocationRequest()
+        createLocationCallback()
         mapView = binding.map
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        createLocationRequest()
-        createLocationCallback()
+
 
        /* binding.btnUbicacion.setOnClickListener {
-            if (checkPermission()) {
-                fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location: Location? ->
-                        if (location != null) {
-                            showLocation(location)
-                        }
-                    }
-            }
+
+
         }*/
     }
 
@@ -116,11 +131,13 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
     }
 
     private fun showLocation(location: Location) {
-        Toast.makeText(
+        longitude =  location.longitude
+        latitud = location.latitude
+      /*  Toast.makeText(
             requireContext(),
-            "Altitud: ${location.altitude} - Latitud: ${location.latitude}",
+            "Altitud: ${location.longitude} - Latitud: ${location.latitude}",
             Toast.LENGTH_SHORT
-        ).show()
+        ).show()*/
     }
 
     private fun checkPermission(): Boolean {
@@ -139,8 +156,21 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(map: GoogleMap) {
-            googleMap = map;
+        googleMap = map;
+
+        val ubicacionActual = LatLng(latitud,longitude)
+
+
+        googleMap.addMarker(
+            MarkerOptions().position(ubicacionActual).title("Home")
+        )
+        googleMap.addMarker(MarkerOptions().position(ubicacionActual).title("Posición actual"))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionActual, 14.0f))
+
+
+
 
     }
 
 }
+

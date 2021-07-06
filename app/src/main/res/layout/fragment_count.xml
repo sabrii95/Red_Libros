@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentCount">
+    tools:context=".ui.home.FragmentCount">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.492"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/switch_close"
+                app:layout_constraintTop_toBottomOf="@+id/mapa"
                 app:strokeColor="#FFFFFF" />
 
             <Button
@@ -130,6 +130,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_email" />
 
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/mapa"
+                android:name="com.example.redlibros.ui.home.fragment_ubicacion"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/switch_close"
+                tools:layout="@layout/fragment_ubicacion" />
+
             <Switch
                 android:id="@+id/switch_close"
                 android:layout_width="wrap_content"
@@ -139,6 +150,9 @@
                 android:text="@string/lbl_cerrar_cuenta"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_save" />
+
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
