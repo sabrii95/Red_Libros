@@ -14,10 +14,12 @@ import com.example.redlibros.R
 import com.example.redlibros.Recycler.Item
 import com.example.redlibros.Recycler.ItemAdapter
 import com.example.redlibros.databinding.FragmentDeseosBinding
+import com.google.firebase.firestore.FirebaseFirestore
 
 class FragmentDeseos : Fragment() , ItemAdapter.ItemClickListener{
     private var _binding: FragmentDeseosBinding? = null
     private val binding get() = _binding!!
+    val db = FirebaseFirestore.getInstance()
 
     private lateinit  var recycler : RecyclerView
     private lateinit  var lista : MutableList<Item>
@@ -48,7 +50,7 @@ class FragmentDeseos : Fragment() , ItemAdapter.ItemClickListener{
         lista = mutableListOf()
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val emailPref = prefs.getString("email","")
-        var book =QueryFirestore().bookforUser(emailPref.toString(), "userDeseo")
+        var book =QueryFirestore().booksforUser(emailPref.toString(), "userDeseo")
         book.addOnSuccessListener { DobumentBook->
 
             for (elemento in DobumentBook ) {

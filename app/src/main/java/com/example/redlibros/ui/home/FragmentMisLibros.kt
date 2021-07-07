@@ -21,8 +21,6 @@ class FragmentMisLibros : Fragment(),ItemAdapter.ItemClickListener {
     private lateinit  var recycler : RecyclerView
     private lateinit  var lista : MutableList<Item>
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,7 +43,7 @@ class FragmentMisLibros : Fragment(),ItemAdapter.ItemClickListener {
         lista = mutableListOf()
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val emailPref = prefs.getString("email", "")
-        var book = QueryFirestore().bookforUser(emailPref.toString(), "usersPerteneciente")
+        var book = QueryFirestore().booksforUser(emailPref.toString(), "usersPerteneciente")
         book.addOnSuccessListener { DobumentBook ->
 
             for (elemento in DobumentBook) {
