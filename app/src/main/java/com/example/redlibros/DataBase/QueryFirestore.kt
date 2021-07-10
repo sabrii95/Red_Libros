@@ -9,23 +9,21 @@ import com.google.firebase.firestore.QuerySnapshot
 class QueryFirestore {
     val db = FirebaseFirestore.getInstance()
 
-     fun addUserBook(libro: VolumeInfo, email: String, array: String) {
+    fun addUserBook(libro: VolumeInfo, email: String, array: String) {
         if (libro.title.toString() != "" && email!= "") {
-           this.seearchBookDataBase(libro).addOnSuccessListener { Elementolibro->
-                if(Elementolibro.size() > 0) {
-                    this.bookforUser(email, array).addOnSuccessListener {document ->
-                        if (document.documents.size == 0){
-
+            this.seearchBookDataBase(libro).addOnSuccessListener { Elementolibro->
+                if(Elementolibro.documents.size > 0) {
+                    this.bookforUser(email, array, libro.title.toString()).addOnCompleteListener { documento ->
+                        if(documento.result.documents.isEmpty() ){
                             db.collection("Libros").document(libro.title.toString())
-                                .update (
-                                    array , FieldValue.arrayUnion( email  )
-                                )
-
+                                .update(array, FieldValue.arrayUnion(email))
                         }
-                        else {
+                        else{
                             this.removeUser(libro, email, array)
                         }
+                        //this.removeUser(libro, email, array)
                     }
+
                 }
                 else{
 
@@ -37,16 +35,19 @@ class QueryFirestore {
         }
 
     }
-    fun bookforUser(email: String, array: String): Task<QuerySnapshot> {
+
+
+    fun bookforUser(email: String, array: String, title: String): Task<QuerySnapshot> {
         return db.collection("Libros")
             .whereArrayContains(array,email )
+            .whereEqualTo("title", title)
             .get()
 
     }
     fun seearchBookDataBase(libro: VolumeInfo): Task<QuerySnapshot>{
+        var title = libro.title.toString()
         return db.collection("Libros")
-            .whereEqualTo("title", libro.title.toString())
-            .limit(1)
+            .whereEqualTo("title", title)
             .get()
 
     }
@@ -71,6 +72,12 @@ class QueryFirestore {
 
             )
         )
+
+    }
+    fun booksforUser(email: String, array: String): Task<QuerySnapshot> {
+        return db.collection("Libros")
+            .whereArrayContains(array,email )
+            .get()
 
     }
 

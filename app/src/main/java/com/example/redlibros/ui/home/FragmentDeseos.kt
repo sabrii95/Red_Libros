@@ -1,28 +1,25 @@
 package com.example.redlibros.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.redlibros.DataBase.QueryFirestore
 import com.example.redlibros.R
 import com.example.redlibros.Recycler.Item
 import com.example.redlibros.Recycler.ItemAdapter
-import com.example.redlibros.databinding.FragmentDeseosBinding
-import com.example.redlibros.databinding.FragmentDetailFragmentBinding
 import com.example.redlibros.databinding.FragmentHomeBinding
-
+import com.google.firebase.firestore.FirebaseFirestore
 
 class FragmentDeseos : Fragment() , ItemAdapter.ItemClickListener{
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    val db = FirebaseFirestore.getInstance()
 
     private lateinit  var recycler : RecyclerView
     private lateinit  var lista : MutableList<Item>
@@ -53,7 +50,7 @@ class FragmentDeseos : Fragment() , ItemAdapter.ItemClickListener{
         lista = mutableListOf()
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val emailPref = prefs.getString("email","")
-        var book =QueryFirestore().bookforUser(emailPref.toString(), "userDeseo")
+        var book =QueryFirestore().booksforUser(emailPref.toString(), "userDeseo")
         book.addOnSuccessListener { DobumentBook->
 
             for (elemento in DobumentBook ) {

@@ -16,14 +16,16 @@ import com.example.redlibros.Model.BookResponse
 import com.example.redlibros.Servicio.ApiBooks
 import com.example.redlibros.Servicio.CallApiBook
 import com.example.redlibros.databinding.FragmentBuscarLibroQrBinding
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.integration.android.IntentIntegrator
 import retrofit2.Call
 import retrofit2.Callback
 
 
+
 class FragmentBuscar_Libro_qr : Fragment() {
 
-    //private val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
     private var book: BookResponse ? = null
     private var _binding: FragmentBuscarLibroQrBinding? = null
     private val binding get() = _binding!!
@@ -63,79 +65,7 @@ class FragmentBuscar_Libro_qr : Fragment() {
         return root
     }
 
- /*   private fun addUserBook(libro: VolumeInfo, email: String, array: String) {
-        if (libro.title.toString() != "" && email!= null) {
-            this.validarUser(email, array).addOnSuccessListener {document ->
-                if (document.documents.size == 0){
-                    this.seearchBookDataBase(libro).addOnCompleteListener { Elementolibro->
-                        if(Elementolibro.isSuccessful) {
-                            db.collection("Libros").document(libro.title.toString())
-                                .update (
-                                    array , FieldValue.arrayUnion( email  )
-                                )
-                                .addOnSuccessListener {
-                                    Toast.makeText(
-                                        context,
-                                        "Se almaceno el libro como pertenencia",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                        }
-                        else {
-                            saveBookDataBase(libro, email, array )
-                        }
-                    }
-                }
-                else{
-                    this.removeUser(libro, email, array)
 
-                }
-            }
-
-        }
-
-    }
-    fun validarUser(email: String, array: String): Task<QuerySnapshot> {
-         return db.collection("Libros")
-            .whereArrayContains(array,email )
-            .get()
-
-    }
-    fun seearchBookDataBase(libro: VolumeInfo): Task<QuerySnapshot>{
-        return db.collection("Libros")
-            .whereEqualTo("title", libro.title)
-            .limit(1)
-            .get()
-
-    }
-    fun removeUser(libro: VolumeInfo, email: String, array: String){
-       db.collection("Libros").document(libro.title.toString())
-            .update (
-                array , FieldValue.arrayRemove( email  )
-            )
-    }
-
-
-    fun saveBookDataBase(libro: VolumeInfo, user: String, array: String) {
-        db.collection("Libros").document(libro.title.toString() ).set(
-            hashMapOf(
-                "title" to libro.title,
-                "authors" to libro.authors,
-                "description" to libro.description,
-                "publisher" to libro.publisher,
-                "publishedDate" to libro.publishedDate ,
-                 array to listOf(user)
-
-            )
-        ).addOnSuccessListener {
-            Toast.makeText(
-                context,
-                "Se almaceno el libro como pertenencia",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-    }*/
     private fun initScanner() {
         val integrator = IntentIntegrator.forSupportFragment(this)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
@@ -214,6 +144,7 @@ class FragmentBuscar_Libro_qr : Fragment() {
         })
 
     }
+
 
 }
 
