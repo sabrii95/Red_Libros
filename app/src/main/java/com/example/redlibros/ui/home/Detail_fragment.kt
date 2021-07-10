@@ -56,7 +56,7 @@ class Detail_fragment : Fragment() {
         var usersPerteneciente: List<String> = emptyList()
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val emailPref = prefs.getString("email","")
-        QueryFirestore().bookforUser(emailPref.toString(), "userDeseo").addOnSuccessListener{ document ->
+        QueryFirestore().booksforUser(emailPref.toString(), "userDeseo").addOnSuccessListener{ document ->
 
             val bookDeseo = document.documents.filter { doc-> doc.get("title") == name }
 
