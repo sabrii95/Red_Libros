@@ -30,11 +30,13 @@ class ItemAdapter(private val items: List<Item>, item: ItemClickListener): Recyc
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.elemento.text = items[position].name
-        Picasso.get()
-            .load(items[position].url)
-            .error(R.drawable.missingbook)
-            .placeholder(R.drawable.missingbook)
-            .into(holder.img)
+        if(items[position].url.isNotEmpty()) {
+            Picasso.get()
+                .load(items[position].url)
+                .error(R.drawable.missingbook)
+                .placeholder(R.drawable.missingbook)
+                .into(holder.img)
+        }
 
         holder.cardItem.setOnClickListener{clickListener.onItemClick(items[position])}
     }

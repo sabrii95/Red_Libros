@@ -55,7 +55,7 @@ class FragmentDeseos : Fragment() , ItemAdapter.ItemClickListener{
 
             for (elemento in DobumentBook ) {
                 lista.add(
-                      Item(elemento.data?.get("title").toString(), elemento.data?.get("authors").toString(), elemento.data?.get("description").toString(), elemento.data?.get("image").toString() )
+                      Item(elemento.data?.get("id").toString(), elemento.data?.get("title").toString(), elemento.data?.get("authors").toString(), elemento.data?.get("description").toString(), elemento.data?.get("image").toString() )
                 )
 
             }
@@ -74,6 +74,7 @@ class FragmentDeseos : Fragment() , ItemAdapter.ItemClickListener{
 
     override fun onItemClick(element: Item) {
         val arg = Bundle().apply {
+            putString("id", element.id)
             putString("name",element.name)
             putString("author",element.author)
             putString("des",element.description)

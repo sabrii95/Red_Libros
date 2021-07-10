@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_match.*
 
 
 class Detail_fragment : Fragment() {
+    private var id:String=""
     private var name:String=""
     private var url:String =""
     private  var author:String=""
@@ -32,6 +33,7 @@ class Detail_fragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        id = arguments?.getString("id").toString()
         name = arguments?.getString("name").toString()
         url = arguments?.getString("url").toString()
         author = arguments?.getString("author").toString()
@@ -47,11 +49,13 @@ class Detail_fragment : Fragment() {
         binding.nameTextView.text = name
         binding.authorTextView.text = "author: $author"
         binding.descriptionTextView.text = des
-        Picasso.get()
-            .load(url)
-            .placeholder(R.drawable.missingbook)
-            .error(R.drawable.missingbook)
-            .into(binding.vistaImageView)
+        if(url.isNotEmpty()) {
+            Picasso.get()
+                .load(url)
+                .placeholder(R.drawable.missingbook)
+                .error(R.drawable.missingbook)
+                .into(binding.vistaImageView)
+        }
 
         var usersPerteneciente: List<String> = emptyList()
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -76,7 +80,7 @@ class Detail_fragment : Fragment() {
 
         }
 
-        val vol = VolumeInfo(name, listOf(author), "", "", des, emptyList(), "", "", ImageLinks("","","","","",""), "")
+        val vol = VolumeInfo(id, name, listOf(author), "", "", des, emptyList(), "", "", ImageLinks("",url,"","","",""), "")
 
         binding.btnDeseo.setOnClickListener {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)

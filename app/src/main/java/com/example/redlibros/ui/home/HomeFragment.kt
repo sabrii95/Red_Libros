@@ -66,12 +66,15 @@ class HomeFragment : Fragment(), ItemAdapter.ItemClickListener {
             for(book in books.items!!) {
            // for(book in 1..10){
              //   books.items!![book].volumeInfo?.title.toString()
+
                 lista.add(
-                Item(
-                    book.volumeInfo?.title.toString(),
-                    book.volumeInfo?.authors.toString(),
-                    book.volumeInfo?.description.toString(),
-                    book.volumeInfo?.imageLinks?.thumbnail.toString())
+                    Item(
+                        book.id.toString(),
+                        book.volumeInfo?.title.toString(),
+                        book.volumeInfo?.authors.toString(),
+                        book.volumeInfo?.description.toString(),
+                        book.volumeInfo?.imageLinks?.thumbnail.toString().replace("http://", "https://")
+                    )
                 )
 
             }
@@ -104,6 +107,7 @@ class HomeFragment : Fragment(), ItemAdapter.ItemClickListener {
 
     override fun onItemClick(element: Item) {
         val arg = Bundle().apply {
+            putString("id", element.id)
             putString("name",element.name)
             putString("author",element.author)
             putString("des",element.description)

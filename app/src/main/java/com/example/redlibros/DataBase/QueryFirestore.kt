@@ -10,12 +10,12 @@ class QueryFirestore {
     val db = FirebaseFirestore.getInstance()
 
     fun addUserBook(libro: VolumeInfo, email: String, array: String) {
-        if (libro.title.toString() != "" && email!= "") {
+        if (libro.id != "" && email!= "") {
             this.seearchBookDataBase(libro).addOnSuccessListener { Elementolibro->
                 if(Elementolibro.documents.size > 0) {
-                    this.bookforUser(email, array, libro.title.toString()).addOnCompleteListener { documento ->
+                    this.bookforUser(email, array, libro.id).addOnCompleteListener { documento ->
                         if(documento.result.documents.isEmpty() ){
-                            db.collection("Libros").document(libro.title.toString())
+                            db.collection("Libros").document(libro.id)
                                 .update(array, FieldValue.arrayUnion(email))
                         }
                         else{
@@ -37,22 +37,21 @@ class QueryFirestore {
     }
 
 
-    fun bookforUser(email: String, array: String, title: String): Task<QuerySnapshot> {
+    fun bookforUser(email: String, array: String, id: String): Task<QuerySnapshot> {
         return db.collection("Libros")
             .whereArrayContains(array,email )
-            .whereEqualTo("title", title)
+            .whereEqualTo("id", id)
             .get()
 
     }
     fun seearchBookDataBase(libro: VolumeInfo): Task<QuerySnapshot>{
-        var title = libro.title.toString()
         return db.collection("Libros")
-            .whereEqualTo("title", title)
+            .whereEqualTo("id", libro.id)
             .get()
 
     }
     fun removeUser(libro: VolumeInfo, email: String, array: String){
-        db.collection("Libros").document(libro.title.toString())
+        db.collection("Libros").document(libro.id)
             .update (
                 array , FieldValue.arrayRemove( email  )
             )
@@ -60,8 +59,9 @@ class QueryFirestore {
 
 
     fun saveBookDataBase(libro: VolumeInfo, user: String, array: String): Task<Void> {
-        return db.collection("Libros").document(libro.title.toString() ).set(
+        return db.collection("Libros").document(libro.id ).set(
             hashMapOf(
+                "id" to libro.id,
                 "title" to libro.title,
                 "authors" to libro.authors,
                 "description" to libro.description,
