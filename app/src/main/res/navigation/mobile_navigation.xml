@@ -18,12 +18,12 @@
     <fragment
         android:id="@+id/nav_BuscarLibroQR"
         android:name="com.example.redlibros.ui.home.FragmentBuscar_Libro_qr"
-        android:label="Resultado de Busqueda"
+        android:label="@string/fragment_busqueda_libro"
         tools:layout="@layout/fragment_buscar__libro_qr" />
     <fragment
         android:id="@+id/detail_fragment"
         android:name="com.example.redlibros.ui.home.Detail_fragment"
-        android:label="fragment_detail_fragment"
+        android:label="@string/fragment_detail"
         tools:layout="@layout/fragment_detail_fragment" >
         <action
             android:id="@+id/action_detail_fragment_to_nav_home"
@@ -38,7 +38,7 @@
     <fragment
         android:id="@+id/nav_LibrosDeseos"
         android:name="com.example.redlibros.ui.home.FragmentDeseos"
-        android:label="fragment_deseos"
+        android:label="@string/fragment_mis_deseos"
         tools:layout="@layout/fragment_deseos" >
         <action
             android:id="@+id/action_nav_LibrosDeseos_to_detail_fragment2"
@@ -47,7 +47,7 @@
     <fragment
         android:id="@+id/nav_fragmentMisLibros"
         android:name="com.example.redlibros.ui.home.FragmentMisLibros"
-        android:label="fragment_mis_libros"
+        android:label="@string/fragment_mis_libros"
         tools:layout="@layout/fragment_mis_libros" >
         <action
             android:id="@+id/action_fragmentMisLibros_to_detail_fragment"
@@ -56,7 +56,7 @@
     <fragment
         android:id="@+id/nav_fragmentCount"
         android:name="com.example.redlibros.ui.home.FragmentCount"
-        android:label="fragment_count"
+        android:label="@string/fragment_mi_cuenta"
         tools:layout="@layout/fragment_count" />
 
 
