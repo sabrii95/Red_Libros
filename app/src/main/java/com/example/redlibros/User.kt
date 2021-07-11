@@ -9,7 +9,9 @@ data class User(
     val image: String,
     val userName: String,
     val pass: String,
-    val fullname: String = ""
+    val fullname: String = "",
+    val longitud: String = "0",
+    val latitud: String = "0"
 ): Parcelable {
 
 }

@@ -3,23 +3,25 @@ package com.example.redlibros.ui.home
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
+import com.example.redlibros.DataBase.QueryFirestore
 import com.example.redlibros.databinding.FragmentUbicacionBinding
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 
 
 class fragment_ubicacion : Fragment(), OnMapReadyCallback {
@@ -51,36 +53,30 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
         _binding = FragmentUbicacionBinding.inflate(inflater, container, false)
         val root: View = binding.root
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        createLocationRequest()
-        createLocationCallback()
+        binding.actualizarUbicacion.setOnClickListener{
 
-        if (checkPermission()) {
-            fusedLocationClient.lastLocation
+            if (checkPermission()) {
+                createLocationRequest()
+                createLocationCallback()
+                fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
+
                     if (location != null) {
                         showLocation(location)
                     }
+                    else
+                        Toast.makeText(
+                            requireContext(),
+                            "Verifique si la ubicacion esta encendida",
+                            Toast.LENGTH_LONG
+                        ).show()
                 }
         }
+        }
 
-        // Inflate the layout for this fragment
         return root
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        startLocationUpdates()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        stopLocationUpdates()
-    }
-
-    private fun stopLocationUpdates() {
-        fusedLocationClient.removeLocationUpdates(locationCallback)
-    }
 
     private fun createLocationRequest() {
         locationRequest = LocationRequest.create().apply {
@@ -90,32 +86,14 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun startLocationUpdates() {
-        if (checkPermission()) {
-            fusedLocationClient.requestLocationUpdates(
-                locationRequest,
-                locationCallback,
-                Looper.getMainLooper()
-            )
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        createLocationRequest()
-        createLocationCallback()
         mapView = binding.map
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this)
 
-
-
-       /* binding.btnUbicacion.setOnClickListener {
-
-
-        }*/
     }
 
     private fun createLocationCallback() {
@@ -133,11 +111,15 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
     private fun showLocation(location: Location) {
         longitude =  location.longitude
         latitud = location.latitude
-      /*  Toast.makeText(
-            requireContext(),
-            "Altitud: ${location.longitude} - Latitud: ${location.latitude}",
-            Toast.LENGTH_SHORT
-        ).show()*/
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        var ubicacion = prefs.edit()
+        ubicacion.putString("latitud",latitud.toString() )
+        ubicacion.putString("longitud",longitude.toString() )
+        ubicacion.apply()
+        var email =prefs.getString("email", "0" ).toString()
+        QueryFirestore().actualizarUbicacion(latitud.toString(),longitude.toString(), email)
+
+        marketMap()
     }
 
     private fun checkPermission(): Boolean {
@@ -157,20 +139,37 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map;
-
-        val ubicacionActual = LatLng(latitud,longitude)
-
-
-        googleMap.addMarker(
-            MarkerOptions().position(ubicacionActual).title("Home")
-        )
-        googleMap.addMarker(MarkerOptions().position(ubicacionActual).title("Posición actual"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionActual, 14.0f))
+        marketMap()
 
 
 
 
     }
+    fun marketMap(){
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+
+        var latitudPrefs =prefs.getString("latitud", "0" )
+        var longituddPrefs= prefs.getString("longitud", "0" )
+
+        latitud = latitudPrefs!!.toDouble()
+        longitude = longituddPrefs!!.toDouble()
+        val ubicacionActual = LatLng(latitud,longitude)
+
+        googleMap.addCircle( CircleOptions()
+            .center(ubicacionActual)
+            .radius(800.toDouble())
+            .strokeWidth(1f)
+            .strokeColor(Color.GRAY)
+            .fillColor(Color.argb(60, 150, 152, 154))
+        )
+
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionActual, 14.0f))
+
+
+
+    }
+
 
 }
 

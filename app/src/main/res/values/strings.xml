@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Red Libros</string>
+    <string name="app_name">Mi Red de Libros</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -14,7 +14,7 @@
     <string name="opcion_Facebook">Inicio con Facebook</string>
     <string name="boton_siguiente">Ingresar</string>
 
-
+    <!--Informacion de cuenta -->
     <string name="txt_username">Ingrese Usuario</string>
     <string name="txt_name">Ingrese Nombre Completo</string>
     <string name="txt_email">Ingrese Email</string>
@@ -27,12 +27,8 @@
     <string name="lbl_edit_data">Modo De Edición</string>
     <string name="lbl_cerrar_cuenta">Cerrar Cuenta</string>
 
+    <!-- Opciones de menu   -->
 
-    <!--Fin de Opciones de Logueo   -->
-
-
-    <!--Opciones de Menu   -->
-    <string name="menu_home">Home</string>
     <string name="menu_mi_cuenta">Mi Cuenta</string>
     <string name="menu_cerrarSesion">Cerrar Sesión</string>
     <string name="menu_buscarLibrosQR">Buscar Libros</string>
@@ -57,9 +53,23 @@
     <string name="description">Esta serie, basada en los libros de George R.R. Martin, muestra la competencia entre familias nobles de siete reinos de Westeros, cuya finalidad es ganar el control sobre el Trono de Hierro.</string>
     <string name="todo">TODO</string>
     <string name="title_activity_main">Libros</string>
+
     <!--Pantalla de home  -->
     <string name="libro">Ingrese el nombre del libro</string>
     <string name="buscar_libro">Buscar</string>
+
+    <!--Pantalla de ubicacion  -->
+    <string name="actualizar_ubicacion">Actualizar Ubicación</string>
+
+    <!--Nombre de los Fragment  -->
+    <string name="menu_home">Home</string>
+    <string name="fragment_principal">Red de libros</string>
+    <string name="fragment_busqueda_libro">Buscar libro </string>
+    <string name="fragment_mis_libros">Mis libros</string>
+    <string name="fragment_mis_deseos">Mis deseos</string>
+    <string name="fragment_mi_cuenta">Mi cuenta</string>
+    <string name="fragment_detail">Más información</string>
+
 
 
     <!-- TODO: Remove or change this placeholder text -->

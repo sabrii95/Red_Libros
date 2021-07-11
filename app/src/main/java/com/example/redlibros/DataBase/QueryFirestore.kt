@@ -81,4 +81,15 @@ class QueryFirestore {
 
     }
 
+    //// Actualizar ubicacion
+
+    fun actualizarUbicacion(latitud : String, longitud: String, user:String) {
+
+        db.collection("User").document(user)
+            .update (
+                "latitud" ,latitud,
+                "longitud", longitud
+            )
+    }
+
 }
