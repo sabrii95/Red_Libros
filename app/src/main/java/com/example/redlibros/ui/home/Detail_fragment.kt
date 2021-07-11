@@ -2,6 +2,7 @@ package com.example.redlibros.ui.home
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.icu.text.CaseMap
 import android.os.Bundle
 import android.util.Log
 import android.util.Size
@@ -9,17 +10,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redlibros.DataBase.QueryFirestore
+import com.example.redlibros.Model.BooksResponse
 import com.example.redlibros.Model.ImageLinks
+import com.example.redlibros.Model.Notification
 import com.example.redlibros.Model.VolumeInfo
 import com.example.redlibros.R
+import com.example.redlibros.Servicio.ApiBooks
+import com.example.redlibros.Servicio.ApiNotification
+import com.example.redlibros.Servicio.CallApiBook
+import com.example.redlibros.Servicio.NotificationApi
 import com.example.redlibros.databinding.FragmentDetailFragmentBinding
 import com.example.redlibros.match.MatchSubItem
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_match.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class Detail_fragment : Fragment() {
@@ -86,11 +99,13 @@ class Detail_fragment : Fragment() {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val emailPref = prefs.getString("email","")
             QueryFirestore().addUserBook( vol, emailPref.toString(), "userDeseo")
+            sendNotificacion(id,name)
 
         }
         binding.btnTengo.setOnClickListener {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val emailPref = prefs.getString("email","")
+            Firebase.messaging.subscribeToTopic(id)
             QueryFirestore().addUserBook( vol, emailPref.toString(), "usersPerteneciente")
 
         }
@@ -99,5 +114,33 @@ class Detail_fragment : Fragment() {
         return binding.root
     }
 
+    fun sendNotificacion(topic: String, title: String){
+        val service = NotificationApi().getRetrofit().create(ApiNotification::class.java)
+        val call = service.sendNotification(topic,title).enqueue(object : Callback<Notification> {
+            override fun onResponse(call: Call<Notification>, response: Response<Notification>) {
+                println("Hola soy la respuesta $response")
+                Toast.makeText(
+                    context,
+                    "Se envio notificacion",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onFailure(call: Call<Notification>, t: Throwable) {
+                println(t)
+                Toast.makeText(
+                    context,
+                    "No se pudo enviar notificacion",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+
+
+
+
+        })
+
+    }
 
 }
