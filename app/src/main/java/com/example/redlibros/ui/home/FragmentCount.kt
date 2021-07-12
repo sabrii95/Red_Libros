@@ -6,7 +6,6 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
@@ -25,7 +23,6 @@ import com.example.redlibros.User
 import com.example.redlibros.databinding.FragmentCountBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
 
@@ -289,17 +286,28 @@ class FragmentCount : Fragment() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         var userRef = db.collection("User").document(user.email).set(user)
             .addOnSuccessListener {
+                val user_auth = FirebaseAuth.getInstance().currentUser
+                user_auth!!.updatePassword(user.pass).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        println("Update Success")
 
-                    var datosusuario = prefs.edit()
-                    datosusuario.putString("userName", user.userName)
-                    datosusuario.putString("image", user.image)
-                    datosusuario.putString("pass", user.pass)
-                    datosusuario.putString("fullname", user.fullname)
-                    datosusuario.apply()
-
-            }
-            .addOnFailureListener {
-                Toast.makeText(context,"Error", Toast.LENGTH_SHORT).show()
+                        var datosusuario = prefs.edit()
+                        datosusuario.putString("userName", user.userName)
+                        datosusuario.putString("image", user.image)
+                        datosusuario.putString("pass", user.pass)
+                        datosusuario.putString("fullname", user.fullname)
+                        datosusuario.apply()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Error al actualizar el password",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                    .addOnFailureListener {
+                        Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+                    }
             }
     }
 
