@@ -12,27 +12,38 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
 
+            <ImageView
+                android:id="@+id/Image"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="36dp"
+                android:background="#85673AB7"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
             <EditText
                 android:id="@+id/txt_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginRight="24dp"
                 android:enabled="false"
                 android:hint="@string/txt_name"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.44"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                app:layout_constraintTop_toBottomOf="@+id/Image" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -94,18 +105,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/txt_username" />
 
 
-
             <Button
                 android:id="@+id/btn_close_account"
                 android:layout_width="342dp"
                 android:layout_height="51dp"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="32dp"
                 android:backgroundTint="#F44336"
                 android:text="@string/btn_close_account"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.492"
+                app:layout_constraintHorizontal_bias="0.594"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mapa"
+                app:layout_constraintTop_toBottomOf="@+id/switch_close"
                 app:strokeColor="#FFFFFF" />
 
             <Button
@@ -113,51 +123,81 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="24dp"
                 android:enabled="false"
                 android:text="@string/btn_cancel"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_email" />
+                app:layout_constraintTop_toBottomOf="@+id/txtPass" />
 
             <Button
                 android:id="@+id/btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="28dp"
                 android:enabled="false"
                 android:text="@string/btn_save"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_email" />
+                app:layout_constraintTop_toBottomOf="@+id/txtPass" />
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/mapa"
                 android:name="com.example.redlibros.ui.home.fragment_ubicacion"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/switch_close"
+                app:layout_constraintTop_toBottomOf="@+id/btn_save"
                 tools:layout="@layout/fragment_ubicacion" />
 
             <Switch
                 android:id="@+id/switch_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"
                 android:text="@string/lbl_cerrar_cuenta"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_save" />
+                app:layout_constraintTop_toBottomOf="@+id/mapa" />
 
+            <Button
+                android:id="@+id/btnCamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="44dp"
+                android:layout_marginTop="48dp"
+                android:text="Camara"
+                app:layout_constraintStart_toEndOf="@+id/Image"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
+            <Button
+                android:id="@+id/btnGallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="44dp"
+                android:layout_marginTop="32dp"
+                android:text="Galeria"
+                app:layout_constraintStart_toEndOf="@+id/Image"
+                app:layout_constraintTop_toBottomOf="@+id/btnCamera" />
+
+            <EditText
+                android:id="@+id/txtPass"
+                android:layout_width="350dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:hint="@string/txt_password"
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_email" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

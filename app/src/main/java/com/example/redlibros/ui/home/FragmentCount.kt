@@ -1,22 +1,39 @@
 package com.example.redlibros.ui.home
 
+import android.app.Activity
+import android.app.ProgressDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
+import com.bumptech.glide.Glide
 import com.example.redlibros.User
 import com.example.redlibros.databinding.FragmentCountBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+
+import com.google.firebase.storage.FirebaseStorage
+
 
 class FragmentCount : Fragment() {
     private val db = FirebaseFirestore.getInstance()
 
     lateinit var userdata: User
 
+    companion object {
+        val TAG = "Change Account";
+        const val CAMERA = 1001;
+        const val GALLERY = 1002;
+    }
+
+    private val mStorageRef = FirebaseStorage.getInstance().reference
+    private lateinit var mProgressDialog: ProgressDialog
 
     private var _binding: FragmentCountBinding? = null
     private val binding get() = _binding!!
@@ -37,30 +54,54 @@ class FragmentCount : Fragment() {
         val txt_name = binding.txtName
         val txt_username = binding.txtUsername
         val txt_email = binding.txtEmail
+        val txt_pass = binding.txtPass
 
         val btn_close_account =binding.btnCloseAccount
         val btn_save = binding.btnSave
         val btn_cancel = binding.btnCancel
 
+        val btn_photo = binding.btnCamera
+        val btn_gallery = binding.btnGallery
+        var image = binding.Image
+
+
+
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        txt_name.setText(prefs.getString("name", ""))
+        txt_name.setText(prefs.getString("fullname", ""))
         txt_email.setText(prefs.getString("email", ""))
-        txt_username.setText(prefs.getString("username", ""))
+        txt_username.setText(prefs.getString("userName", ""))
+        txt_pass.setText(prefs.getString("pass", ""))
+
+        Glide.with(this).load(prefs.getString("image",""))
+            .fitCenter()
+            .centerCrop()
+            .into(image)
 
         // Email no puede ser editado.
         txt_email.isEnabled = false
+        btn_photo.isEnabled = false
+        btn_gallery.isEnabled = false
+        btn_close_account.isEnabled = false
 
         switch_edit.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 // El switch esta activo para edición
                 txt_name.isEnabled = true
                 txt_username.isEnabled = true
+                txt_pass.isEnabled = true
+
+                btn_photo.isEnabled = true
+                btn_gallery.isEnabled = true
 
                 btn_save.isEnabled = true
                 btn_cancel.isEnabled = true
             } else {
                 txt_name.isEnabled = false
                 txt_username.isEnabled = false
+                txt_pass.isEnabled = false
+
+                btn_photo.isEnabled = false
+                btn_gallery.isEnabled = false
 
                 btn_save.isEnabled = false
                 btn_cancel.isEnabled = false
@@ -79,9 +120,9 @@ class FragmentCount : Fragment() {
             userdata = User(
                 email=txt_email.text.toString(),
                 enable=true,
-                image="",
+                image=prefs.getString("image","").toString(),
                 userName=txt_username.text.toString(),
-                pass= "",
+                pass=txt_pass.text.toString(),
                 fullname=txt_name.text.toString(),
             )
             this.editInfo(userdata)
@@ -93,18 +134,70 @@ class FragmentCount : Fragment() {
             userdata = User(
                 email=txt_email.text.toString(),
                 enable=false,
-                image="",
+                image=prefs.getString("image","").toString(),
                 userName=txt_username.text.toString(),
-                pass= "",
+                pass=txt_pass.text.toString(),
                 fullname=txt_name.text.toString(),
             )
             this.closeAccount(userdata)
         }
 
+        // Botón Subir foto desde galeria
+        btn_gallery.setOnClickListener{
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, GALLERY)
+        }
 
+        // Botón Subir foto desde camara
+        /*btn_photo.setOnClickListener{
 
+        }*/
         return root
     }
+
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        var image = binding.Image
+        if (requestCode == GALLERY && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "Photo was selected")
+
+            val imageFileName = "/profile/pic${System.currentTimeMillis()}.png"
+            val filePath: Uri = data!!.getData()!!
+
+            mProgressDialog = ProgressDialog(context)
+            mProgressDialog.setMessage("Subiendo imagen...")
+            mProgressDialog.show()
+
+            val uploadTask = mStorageRef.child(imageFileName).putFile(filePath)
+
+            uploadTask.addOnSuccessListener{
+                Log.e(TAG, "La imagen se subio correctamente.")
+                val downloadURLTask = mStorageRef.child(imageFileName).downloadUrl
+                downloadURLTask.addOnSuccessListener{
+                    Log.e(TAG, "IMAGE TAG: $it")
+                    val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+                    var datosusuario = prefs.edit()
+                    datosusuario.putString("image", "$it")
+                    datosusuario.apply()
+                    Glide.with(this).load(it)
+                        .fitCenter()
+                        .centerCrop()
+                        .into(image)
+                    mProgressDialog.dismiss()
+                }.addOnFailureListener{
+                    mProgressDialog.dismiss()
+                }
+            }.addOnFailureListener{
+                Log.e(TAG, "Hubo un error al subír la imagen ${it.printStackTrace()}")
+            }
+
+        }
+    }
+
+
     // Cambio entre modo edición y no edición de close account
 
 
@@ -114,7 +207,7 @@ fun editInfo(user: User){
         .addOnSuccessListener {
 
                 var datosusuario = prefs.edit()
-                datosusuario.putString("username", user.userName)
+                datosusuario.putString("userName", user.userName)
                 datosusuario.putString("image", user.image)
                 datosusuario.putString("pass", user.pass)
                 datosusuario.putString("fullname", user.fullname)
