@@ -1,15 +1,23 @@
 package com.example.redlibros.ui.home
 
+import android.Manifest
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
@@ -19,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 
 
 class FragmentCount : Fragment() {
@@ -34,7 +43,7 @@ class FragmentCount : Fragment() {
 
     private val mStorageRef = FirebaseStorage.getInstance().reference
     private lateinit var mProgressDialog: ProgressDialog
-
+    private val REQUEST_PERMISSION = 100
     private var _binding: FragmentCountBinding? = null
     private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,17 +159,35 @@ class FragmentCount : Fragment() {
         }
 
         // Botón Subir foto desde camara
-        /*btn_photo.setOnClickListener{
+        btn_photo.setOnClickListener{
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(intent, CAMERA)
+        }
 
-        }*/
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkCameraPermission()
+    }
+
+    private fun checkCameraPermission(): Boolean {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(Manifest.permission.CAMERA),
+                REQUEST_PERMISSION)
+        }
+        return true
+    }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         var image = binding.Image
+
         if (requestCode == GALLERY && resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "Photo was selected")
 
@@ -182,6 +209,65 @@ class FragmentCount : Fragment() {
                     var datosusuario = prefs.edit()
                     datosusuario.putString("image", "$it")
                     datosusuario.apply()
+                    userdata = User(
+                        email=binding.txtEmail.text.toString(),
+                        enable=true,
+                        image="$it",
+                        userName=binding.txtUsername.text.toString(),
+                        pass=binding.txtPass.text.toString(),
+                        fullname=binding.txtName.text.toString(),
+                    )
+                    var userRef = db.collection("User").document(userdata.email).set(userdata)
+
+                    Glide.with(this).load(it)
+                        .fitCenter()
+                        .centerCrop()
+                        .into(image)
+                    mProgressDialog.dismiss()
+                }.addOnFailureListener{
+                    mProgressDialog.dismiss()
+                }
+            }.addOnFailureListener{
+                Log.e(TAG, "Hubo un error al subír la imagen ${it.printStackTrace()}")
+            }
+        }
+
+        if (requestCode == CAMERA && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "Se saco la foto")
+
+            val imageFileName = "/profile/pic${System.currentTimeMillis()}.png"
+
+            mProgressDialog = ProgressDialog(context)
+            mProgressDialog.setMessage("Subiendo imagen...")
+            mProgressDialog.show()
+
+            val bitmap = data?.extras?.get("data") as Bitmap
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val data = baos.toByteArray()
+            val uploadTask = mStorageRef.child(imageFileName).putBytes(data)
+
+
+            uploadTask.addOnSuccessListener{
+                Log.e(TAG, "La imagen se subio correctamente.")
+                val downloadURLTask = mStorageRef.child(imageFileName).downloadUrl
+                downloadURLTask.addOnSuccessListener{
+                    Log.e(TAG, "IMAGE TAG: $it")
+                    val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+                    var datosusuario = prefs.edit()
+                    datosusuario.putString("image", "$it")
+                    datosusuario.apply()
+                    userdata = User(
+                        email=binding.txtEmail.text.toString(),
+                        enable=true,
+                        image="$it",
+                        userName=binding.txtUsername.text.toString(),
+                        pass=binding.txtPass.text.toString(),
+                        fullname=binding.txtName.text.toString(),
+                    )
+
+                    var userRef = db.collection("User").document(userdata.email).set(userdata)
+
                     Glide.with(this).load(it)
                         .fitCenter()
                         .centerCrop()
@@ -199,38 +285,36 @@ class FragmentCount : Fragment() {
 
 
     // Cambio entre modo edición y no edición de close account
+    fun editInfo(user: User){
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        var userRef = db.collection("User").document(user.email).set(user)
+            .addOnSuccessListener {
 
+                    var datosusuario = prefs.edit()
+                    datosusuario.putString("userName", user.userName)
+                    datosusuario.putString("image", user.image)
+                    datosusuario.putString("pass", user.pass)
+                    datosusuario.putString("fullname", user.fullname)
+                    datosusuario.apply()
 
-fun editInfo(user: User){
-    val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-    var userRef = db.collection("User").document(user.email).set(user)
-        .addOnSuccessListener {
+            }
+            .addOnFailureListener {
+                Toast.makeText(context,"Error", Toast.LENGTH_SHORT).show()
+            }
+    }
 
-                var datosusuario = prefs.edit()
-                datosusuario.putString("userName", user.userName)
-                datosusuario.putString("image", user.image)
-                datosusuario.putString("pass", user.pass)
-                datosusuario.putString("fullname", user.fullname)
-                datosusuario.apply()
-
-        }
-        .addOnFailureListener {
-            Toast.makeText(context,"Error", Toast.LENGTH_SHORT).show()
-        }
-}
-
-fun closeAccount(user: User){
-    val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-    var userRef = db.collection("User").document(user.email).set(user)
-        .addOnSuccessListener {
-            FirebaseAuth.getInstance().signOut()
-            /*val intent = Intent(this, opciones_login::class.java)
-            finish()*/
-        }
-        .addOnFailureListener {
-            Toast.makeText(context,"Error", Toast.LENGTH_SHORT).show()
-        }
-}
+    fun closeAccount(user: User){
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        var userRef = db.collection("User").document(user.email).set(user)
+            .addOnSuccessListener {
+                FirebaseAuth.getInstance().signOut()
+                /*val intent = Intent(this, opciones_login::class.java)
+                finish()*/
+            }
+            .addOnFailureListener {
+                Toast.makeText(context,"Error", Toast.LENGTH_SHORT).show()
+            }
+    }
 
 
 }
