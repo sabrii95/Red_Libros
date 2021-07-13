@@ -1,19 +1,16 @@
 package com.example.redlibros.ui.home
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
-import com.example.redlibros.Model.BooksResponse
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.redlibros.Model.BooksResponse
 import com.example.redlibros.Recycler.Item
 import com.example.redlibros.Recycler.ItemAdapter
 import com.example.redlibros.Servicio.ApiBooks
@@ -49,11 +46,13 @@ class HomeFragment : Fragment(), ItemAdapter.ItemClickListener {
 //        recycler.layoutManager = LinearLayoutManager(context)
         recycler.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
-
-
+        binding.btnBuscar.visibility = View.VISIBLE
+        binding.edtBuscar.visibility = View.VISIBLE
 
         binding.btnBuscar.setOnClickListener {
-            searchBook(binding.edtBuscar.text.toString())
+            if(binding.edtBuscar.text.toString().isNotBlank()) {
+                searchBook(binding.edtBuscar.text.toString())
+            }
         }
         return root
     }

@@ -37,6 +37,9 @@ class FragmentMisLibros : Fragment(),ItemAdapter.ItemClickListener {
 
         recycler = binding.mRecyclerView
         recycler.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        val marginLayoutParams = binding.mRecyclerView.layoutParams as ViewGroup.MarginLayoutParams
+        marginLayoutParams.topMargin = 0
+        binding.mRecyclerView.layoutParams = marginLayoutParams
         llenarLista()
         return root
     }
