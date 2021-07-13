@@ -17,13 +17,16 @@ class QueryFirestore {
                 if(Elementolibro.documents.size > 0) {
                     this.bookforUser(email, array, libro.id).addOnCompleteListener { documento ->
                         if(documento.result.documents.isEmpty() ){
-                            Firebase.messaging.subscribeToTopic(libro.id)
+                            if(array != "userDeseo"){
+                                Firebase.messaging.subscribeToTopic(libro.id)
+                            }
                             db.collection("Libros").document(libro.id)
                                 .update(array, FieldValue.arrayUnion(email))
                         }
                         else{
-
-                            Firebase.messaging.unsubscribeFromTopic(libro.id)
+                            if(array != "userDeseo"){
+                                Firebase.messaging.unsubscribeFromTopic(libro.id)
+                            }
                             this.removeUser(libro, email, array)
                         }
                         //this.removeUser(libro, email, array)
