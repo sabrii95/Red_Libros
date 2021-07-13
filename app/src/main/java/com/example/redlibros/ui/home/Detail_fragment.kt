@@ -65,7 +65,9 @@ class Detail_fragment : Fragment() {
             val bookDeseo = document.documents.filter { doc-> doc.get("title") == name }
 
             for (document in bookDeseo) {
-                usersPerteneciente = document.get("usersPerteneciente") as List<String>
+                if(document.get("usersPerteneciente") != null) {
+                    usersPerteneciente = document.get("usersPerteneciente") as List<String>
+                }
             }
 
             if(usersPerteneciente.size > 0) {
