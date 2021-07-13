@@ -5,6 +5,8 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 
 class QueryFirestore {
     val db = FirebaseFirestore.getInstance()
@@ -15,10 +17,13 @@ class QueryFirestore {
                 if(Elementolibro.documents.size > 0) {
                     this.bookforUser(email, array, libro.id).addOnCompleteListener { documento ->
                         if(documento.result.documents.isEmpty() ){
+                            Firebase.messaging.subscribeToTopic(libro.id)
                             db.collection("Libros").document(libro.id)
                                 .update(array, FieldValue.arrayUnion(email))
                         }
                         else{
+
+                            Firebase.messaging.unsubscribeFromTopic(libro.id)
                             this.removeUser(libro, email, array)
                         }
                         //this.removeUser(libro, email, array)
