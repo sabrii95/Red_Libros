@@ -151,6 +151,14 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
         var latitudPrefs =prefs.getString("latitud", "0" )
         var longituddPrefs= prefs.getString("longitud", "0" )
 
+        if(longituddPrefs == "null" || longituddPrefs == "" || longituddPrefs == null ){
+            longituddPrefs = "0"
+        }
+        if(latitudPrefs == null || latitudPrefs == "" ){
+            latitudPrefs="0"
+        }
+
+
         latitud = latitudPrefs!!.toDouble()
         longitude = longituddPrefs!!.toDouble()
         val ubicacionActual = LatLng(latitud,longitude)
