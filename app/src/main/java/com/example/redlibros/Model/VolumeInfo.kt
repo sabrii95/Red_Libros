@@ -1,6 +1,6 @@
 package com.example.redlibros.Model
 
-data class VolumeInfo(val id: String,
+data class VolumeInfo(var id: String,
                       val title: String?,
                       val authors: List<String>?,
                       val publisher: String?,

@@ -9,7 +9,9 @@ data class User(
     val image: String = "https://firebasestorage.googleapis.com/v0/b/red-biblioteca.appspot.com/o/profile%2Fdefault.jpg?alt=media&token=7cd210e3-3ddc-43ec-a011-7629bafbb448",
     val userName: String,
     val pass: String,
-    val fullname: String = ""
+    val fullname: String = "",
+    val longitud: String = "0",
+    val latitud: String = "0"
 ): Parcelable {
 
 }

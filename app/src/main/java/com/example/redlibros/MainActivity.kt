@@ -4,9 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.ImageDecoder
-import android.net.Uri
+import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
@@ -24,6 +24,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
+import com.example.redlibros.DataBase.QueryFirestore
 import com.example.redlibros.databinding.ActivityMainBinding
 import com.google.android.gms.location.*
 import com.google.android.material.navigation.NavigationView
@@ -36,15 +37,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var auth: FirebaseAuth
+
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var drawerLayout: DrawerLayout
+
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    //lateinit var storage: FirebaseStorage
+    private lateinit var locationCallback: LocationCallback
+    private lateinit var locationRequest: LocationRequest
+    var latitud: Double = 0.0
+    var longitude: Double = 0.0
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -72,8 +80,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             false
         }
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
 
@@ -84,23 +90,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         navView.setNavigationItemSelectedListener(this)
+
+
         val mail = binding.navView.getHeaderView(0).findViewById<MaterialTextView>(R.id.txt_mail)
         var username = binding.navView.getHeaderView(0).findViewById<MaterialTextView>(R.id.txt_user_name)
         var image = binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.image_user)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
-
+        mail.text = prefs.getString("email","")
+        username.text = prefs.getString("username","")
         Glide.with(this).load(prefs.getString("image", "").toString())
             .fitCenter()
             .centerCrop()
             .into(image)
-
-        mail.text = prefs.getString("email","").toString()
-        username.text = prefs.getString("userName","").toString()
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+
         checLocationpermission()
+
 
 
     }
@@ -135,7 +143,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun  cerrarSesion(){
         FirebaseAuth.getInstance().signOut()
-        val intent = Intent(this, opciones_login::class.java)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        prefs.edit().clear().commit()
+
+        val intent = Intent(this, login::class.java)
 
         startActivity(intent)
         finishAffinity()
@@ -208,7 +219,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)) {
             //El usuario ya ha rechazado el permiso anteriormente, debemos informarle que vaya a ajustes.
-            Toast.makeText(this, "El usuario ya ha rechazado lo permisos", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "El usuario ya ha rechazado lo permisos", Toast.LENGTH_SHORT).show()
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                0)
         } else {
             //El usuario nunca ha aceptado ni rechazado, así que le pedimos que acepte el permiso.
             ActivityCompat.requestPermissions(this,
@@ -224,19 +238,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode==0){
-            if(grantResults.isNotEmpty() &&  grantResults[0] ==PackageManager.PERMISSION_GRANTED){
+            if(grantResults.isNotEmpty() &&  grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 if (ActivityCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
-
                     return
                 }
-
+                else {
+                    Toast.makeText(this, "Permiso cencedido", Toast.LENGTH_SHORT).show()
+                    createLocationRequest()
+                    createLocationCallback()
+                    fusedLocationClient.lastLocation
+                        .addOnSuccessListener { location: Location? ->
+                            if (location != null) {
+                                showLocation(location)
+                            }
+                        }
+                }
 
             }
-
-                    Toast.makeText(this, "Permiso cencedido", Toast.LENGTH_SHORT).show()
 
         }
         else{
@@ -244,6 +265,69 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
     }
+    private fun checkPermission(): Boolean {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Toast.makeText(this, "NO TENES PERMISOS", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+    }
+
+    private fun createLocationRequest() {
+        locationRequest = LocationRequest.create().apply {
+            interval = 3000
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+    }
+
+    private fun startLocationUpdates() {
+        if (checkPermission()) {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
+        }
+    }
+
+    private fun createLocationCallback() {
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                locationResult.locations.map { it->
+                    showLocation(it)
+                    //parece que si no hago esto no lo guarda
+                }
+            }
+        }
+    }
+
+    private fun showLocation(location: Location) {
+        longitude =  location.longitude
+        latitud = location.latitude
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        var ubicacion = prefs.edit()
+        ubicacion.putString("latitud",latitud.toString() )
+        ubicacion.putString("longitud",longitude.toString() )
+        var email =prefs.getString("email", "0" ).toString()
+        QueryFirestore().actualizarUbicacion(latitud.toString(),longitude.toString(), email)
+
+        Toast.makeText(
+            this,
+            "fkdjfkdjf: ${location.longitude} - Latitud: ${location.latitude}",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+
 
 
 

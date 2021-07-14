@@ -101,6 +101,7 @@ class FragmentBuscar_Libro_qr : Fragment() {
     }
     fun drawBook ( response: retrofit2.Response<BookResponse>, contexto : Context){
         book = response?.body()
+        book?.volumeInfo?.id = book?.id.toString()
         val title: String = book?.volumeInfo?.title.toString()
         val autor: String = book?.volumeInfo?.authors.toString()
         val autor_sin_caracteres_eseciales = autor.replace("\\[\\]<>", "")
