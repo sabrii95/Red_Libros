@@ -1,6 +1,7 @@
 package com.example.redlibros
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -29,7 +30,7 @@ import com.google.android.gms.location.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
-
+import com.google.firebase.storage.FirebaseStorage
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -50,6 +51,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -66,6 +70,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
+
+
 
 
         val navView: NavigationView = binding.navView
@@ -90,20 +96,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var username = binding.navView.getHeaderView(0).findViewById<MaterialTextView>(R.id.txt_user_name)
         var image = binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.image_user)
 
-
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         mail.text = prefs.getString("email","")
         username.text = prefs.getString("username","")
-        Glide.with(this).load(prefs.getString("image","").toString()).into(image)
-
+        Glide.with(this).load(prefs.getString("image", "").toString())
+            .fitCenter()
+            .centerCrop()
+            .into(image)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
 
         checLocationpermission()
 
-    }
 
+
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -116,6 +124,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
     override fun onBackPressed() {
+        var image = binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.image_user)
+        var username = binding.navView.getHeaderView(0).findViewById<MaterialTextView>(R.id.txt_user_name)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        username.text = prefs.getString("userName","").toString()
+
+        Glide.with(this).load(prefs.getString("image", "").toString())
+            .fitCenter()
+            .centerCrop()
+            .into(image)
+
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
@@ -135,6 +153,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     }
+
+/*
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        var selectedPhotoUri: Uri? = null
+        var image = binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.image_user)
+        val btn_photo = binding.navView.getHeaderView(0).findViewById<Button>(R.id.btnPhoto)
+
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
+            // proceed and check what the selected image was....
+            //var selectedPhotoUri: Uri? = null
+            selectedPhotoUri = data?.data!!
+
+            val source = ImageDecoder.createSource(getContentResolver(), selectedPhotoUri)
+            val bitmap = ImageDecoder.decodeBitmap(source)
+            //val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
+            image.setImageBitmap(bitmap)
+            btn_photo.alpha = 0f
+
+        }
+    }*/
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle item selection
