@@ -230,7 +230,10 @@ class login : AppCompatActivity() {
                             true,
                             user?.photoUrl.toString(),
                             user!!.displayName.toString(),
-                            "",document.data?.get("latitud").toString(),document.data?.get("longitud").toString())
+                            "",
+                            "",
+                            document.data?.get("latitud").toString(),
+                            document.data?.get("longitud").toString())
                         ingresarUser(dataUser)
                         val intent = Intent(this, MainActivity::class.java)
                         val datosusuario = prefs.edit()
