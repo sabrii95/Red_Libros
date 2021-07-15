@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -96,11 +95,7 @@ class HomeFragment : Fragment(), ItemAdapter.ItemClickListener {
         }*/
         val adapter = ItemAdapter(this.lista, this)
         recycler.adapter = adapter
-        Toast.makeText(
-            context,
-            "No se encontro libro"+ books.totalItems,
-            Toast.LENGTH_SHORT
-        ).show()
+
 
     }
 
@@ -111,6 +106,8 @@ class HomeFragment : Fragment(), ItemAdapter.ItemClickListener {
             putString("author",element.author)
             putString("des",element.description)
             putString("url",element.url)
+            putBoolean("mostrar_contenido",true)
+
         }
 
         findNavController().navigate(com.example.redlibros.R.id.action_nav_home_to_detail_fragment,arg)
