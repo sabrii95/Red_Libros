@@ -64,15 +64,13 @@
                 android:textColor="@color/black" />
 
             <Button
-                android:id="@+id/btnDeseo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/authorTextView"
-                android:layout_marginStart="5dp"
+                android:text="Lo quiero"
+                android:id="@+id/btnDeseo"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="2dp"
-                android:layout_toEndOf="@id/posterCardView"
-                android:text="@string/quiero" />
+                android:layout_below="@id/authorTextView"
+                android:layout_toEndOf="@id/posterCardView"/>
 
             <Button
                 android:id="@+id/btnTengo"
@@ -82,6 +80,20 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toEndOf="@id/btnDeseo"
                 android:text="@string/tengo" />
+
+            <Button
+                android:id="@+id/btn_quitar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/authorTextView"
+
+                android:layout_marginStart="64dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="61dp"
+                android:layout_toEndOf="@id/posterCardView"
+                android:gravity="center_horizontal"
+                android:text="Quitar" />
+
             <ScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"

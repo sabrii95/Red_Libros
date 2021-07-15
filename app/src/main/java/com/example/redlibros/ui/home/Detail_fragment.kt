@@ -1,35 +1,26 @@
 package com.example.redlibros.ui.home
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
-import android.icu.text.CaseMap
 import android.os.Bundle
-import android.util.Log
-import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ScrollView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redlibros.DataBase.QueryFirestore
-import com.example.redlibros.Model.BooksResponse
 import com.example.redlibros.Model.ImageLinks
 import com.example.redlibros.Model.Notification
 import com.example.redlibros.Model.VolumeInfo
 import com.example.redlibros.R
-import com.example.redlibros.Servicio.ApiBooks
 import com.example.redlibros.Servicio.ApiNotification
-import com.example.redlibros.Servicio.CallApiBook
 import com.example.redlibros.Servicio.NotificationApi
 import com.example.redlibros.databinding.FragmentDetailFragmentBinding
 import com.example.redlibros.match.MatchSubItem
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_match.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -43,6 +34,8 @@ class Detail_fragment : Fragment() {
     private var des:String=""
     private var _binding: FragmentDetailFragmentBinding? = null
     private val binding get() = _binding!!
+    private  var visible: Boolean = true
+    private lateinit var array : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +44,9 @@ class Detail_fragment : Fragment() {
         url = arguments?.getString("url").toString()
         author = arguments?.getString("author").toString()
         des = arguments?.getString("des").toString()
+        visible = arguments?.getBoolean("mostrar_contenido")!!
+        array = arguments?.getString("array").toString()
+
 
     }
     @SuppressLint("SetTextI18n")
@@ -73,7 +69,8 @@ class Detail_fragment : Fragment() {
         var usersPerteneciente: List<String> = emptyList()
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val emailPref = prefs.getString("email","")
-        QueryFirestore().booksforUser(emailPref.toString(), "userDeseo").addOnSuccessListener{ document ->
+        QueryFirestore().booksforUser(emailPref.toString(), "userDeseo")
+            .addOnSuccessListener{ document ->
 
             val bookDeseo = document.documents.filter { doc-> doc.get("title") == name }
 
@@ -97,10 +94,24 @@ class Detail_fragment : Fragment() {
 
         val vol = VolumeInfo(id, name, listOf(author), "", "", des, emptyList(), "", "", ImageLinks("",url,"","","",""), "")
 
+      
+        if(visible == false){
+            binding.btnDeseo.setVisibility(View.GONE)
+            binding.btnTengo.setVisibility(View.GONE)
+            binding.btnQuitar.setVisibility(View.VISIBLE)
+        }
+        else{
+            binding.btnDeseo.setVisibility(View.VISIBLE)
+            binding.btnTengo.setVisibility(View.VISIBLE)
+            binding.btnQuitar.setVisibility(View.GONE)
+        }
+
+
+
         binding.btnDeseo.setOnClickListener {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val emailPref = prefs.getString("email","")
-            QueryFirestore().addUserBook( vol, emailPref.toString(), "userDeseo")
+            QueryFirestore().addUserBook( vol, emailPref.toString(), "userDeseo", requireContext())
             sendNotificacion(id,name)
 
         }
@@ -108,7 +119,21 @@ class Detail_fragment : Fragment() {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val emailPref = prefs.getString("email","")
             Firebase.messaging.subscribeToTopic(id)
-            QueryFirestore().addUserBook( vol, emailPref.toString(), "usersPerteneciente")
+            QueryFirestore().addUserBook( vol, emailPref.toString(), "usersPerteneciente",requireContext())
+
+        }
+        binding.btnQuitar.setOnClickListener {
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val emailPref = prefs.getString("email","").toString()
+            QueryFirestore().removeUser(id,emailPref,array)
+                .addOnSuccessListener {
+                    Toast.makeText(
+                        context,
+                        "Se quito el libro de la lista",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                }
 
         }
 

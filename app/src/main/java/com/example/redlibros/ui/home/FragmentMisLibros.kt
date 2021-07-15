@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.redlibros.DataBase.QueryFirestore
@@ -15,7 +14,6 @@ import com.example.redlibros.R
 import com.example.redlibros.Recycler.Item
 import com.example.redlibros.Recycler.ItemAdapter
 import com.example.redlibros.databinding.FragmentHomeBinding
-import com.example.redlibros.databinding.FragmentMisLibrosBinding
 
 class FragmentMisLibros : Fragment(),ItemAdapter.ItemClickListener {
     private var _binding: FragmentHomeBinding? = null
@@ -75,6 +73,8 @@ class FragmentMisLibros : Fragment(),ItemAdapter.ItemClickListener {
             putString("author",element.author)
             putString("des",element.description)
             putString("url",element.url)
+            putBoolean("mostrar_contenido",false)
+            putString("array", "usersPerteneciente")
         }
 
         findNavController().navigate(R.id.action_fragmentMisLibros_to_detail_fragment,arg)

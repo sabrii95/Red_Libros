@@ -82,6 +82,8 @@ class FragmentDeseos : Fragment() , ItemAdapter.ItemClickListener{
             putString("author",element.author)
             putString("des",element.description)
             putString("url",element.url)
+            putBoolean("mostrar_contenido",false)
+            putString("array", "userDeseo")
         }
 
         findNavController().navigate(R.id.action_nav_LibrosDeseos_to_detail_fragment2,arg)
