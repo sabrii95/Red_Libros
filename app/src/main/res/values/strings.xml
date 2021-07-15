@@ -74,6 +74,7 @@
     <string name="gallery">Gallery</string>
     <string name="quiero">I Want It</string>
     <string name="tengo">I Got It</string>
+    <string name="quitar">Remove</string>
 
     <string name="presentacion_usuarios">Below you will find the users who have the book you want</string>
 
