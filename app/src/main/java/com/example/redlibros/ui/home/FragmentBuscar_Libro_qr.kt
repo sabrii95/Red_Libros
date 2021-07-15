@@ -54,12 +54,15 @@ class FragmentBuscar_Libro_qr : Fragment() {
          binding.btnGuardarLibro.setOnClickListener {
              val prefs = PreferenceManager.getDefaultSharedPreferences(context)
              val emailPref = prefs.getString("email","")
-             QueryFirestore().addUserBook( book?.volumeInfo!!, emailPref.toString(), "usersPerteneciente")
+             QueryFirestore()
+                 .addUserBook( book?.volumeInfo!!, emailPref.toString(), "usersPerteneciente", requireContext())
+
          }
         binding.btnLibroDeseado.setOnClickListener {
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val emailPref = prefs.getString("email","")
-            QueryFirestore().addUserBook( book?.volumeInfo!!, emailPref.toString(), "userDeseo")
+            QueryFirestore()
+                .addUserBook( book?.volumeInfo!!, emailPref.toString(), "userDeseo",requireContext())
 
         }
         return root
@@ -104,7 +107,7 @@ class FragmentBuscar_Libro_qr : Fragment() {
         book?.volumeInfo?.id = book?.id.toString()
         val title: String = book?.volumeInfo?.title.toString()
         val autor: String = book?.volumeInfo?.authors.toString()
-        val autor_sin_caracteres_eseciales = autor.replace("\\[\\]<>", "")
+
         val description: String = book?.volumeInfo?.description.toString()
         val description_sin_caractere_especiales = description.replace("\\[\\]<>", "")
         val feha: String = book?.volumeInfo?.publishedDate.toString()
