@@ -8,40 +8,40 @@
     <string name="action_settings">Settings</string>
 
     <!--Opciones de Logueo   -->
-    <string name="opcion_Iniciar_Sesion">Iniciar Sesion</string>
-    <string name="opcion_Registrarse">Registrarse</string>
-    <string name="opcion_Google">Inicio con Google</string>
-    <string name="opcion_Facebook">Inicio con Facebook</string>
-    <string name="boton_siguiente">Ingresar</string>
+    <string name="opcion_Iniciar_Sesion">Sign In</string>
+    <string name="opcion_Registrarse">Registration</string>
+    <string name="opcion_Google">Sign In Whit Google</string>
+    <string name="opcion_Facebook">Sign In Whit Facebook</string>
+    <string name="boton_siguiente">Sign In</string>
 
     <!--Informacion de cuenta -->
-    <string name="txt_username">Ingrese Usuario</string>
-    <string name="txt_name">Ingrese Nombre Completo</string>
-    <string name="txt_email">Ingrese Email</string>
-    <string name="txt_password">Ingrese Password</string>
-    <string name="btn_save">Guardar</string>
-    <string name="btn_cancel">Cancelar</string>
-    <string name="btn_close_account">Cerrar Cuenta</string>
-    <string name="lbl_basic_info">Información Básica</string>
-    <string name="lbl_access_data">Datos De Acceso</string>
-    <string name="lbl_edit_data">Modo De Edición</string>
-    <string name="lbl_cerrar_cuenta">Cerrar Cuenta</string>
+    <string name="txt_username">Username</string>
+    <string name="txt_name">Fullname</string>
+    <string name="txt_email">Email</string>
+    <string name="txt_password">Password</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_close_account">Close Account</string>
+    <string name="lbl_basic_info">Basic Information</string>
+    <string name="lbl_access_data">Access Data</string>
+    <string name="lbl_edit_data">Edition Mode</string>
+    <string name="lbl_cerrar_cuenta">Close Account</string>
 
     <!-- Opciones de menu   -->
 
-    <string name="menu_mi_cuenta">Mi Cuenta</string>
-    <string name="menu_cerrarSesion">Cerrar Sesión</string>
-    <string name="menu_buscarLibrosQR">Buscar Libros</string>
-    <string name="menu_LibrosDeseos">Lista Deseos</string>
-    <string name="menu_MisLibros">Mis Libros</string>
+    <string name="menu_mi_cuenta">My Account</string>
+    <string name="menu_cerrarSesion">Logout</string>
+    <string name="menu_buscarLibrosQR">Search Books</string>
+    <string name="menu_LibrosDeseos">Wishlist</string>
+    <string name="menu_MisLibros">My Books</string>
     <!--Fin de Opciones de Menu   -->
 
-    <string name="search_book">Buscar Otro Libro</string>
+    <string name="search_book">Search Other Book</string>
 
     <!--Hint formulario de registro, iniciar sesion -->
     <string name="email">Email</string>
-    <string name="password">Contraseña</string>
-    <string name="user_name">Nombre de Usuario</string>
+    <string name="password">Password</string>
+    <string name="user_name">Username</string>
 
     <!--Datos del libro    -->
     <string name="first_fragment_label">First Fragment</string>
@@ -52,27 +52,30 @@
     <string name="author">George R. R. Martin</string>
     <string name="description">Esta serie, basada en los libros de George R.R. Martin, muestra la competencia entre familias nobles de siete reinos de Westeros, cuya finalidad es ganar el control sobre el Trono de Hierro.</string>
     <string name="todo">TODO</string>
-    <string name="title_activity_main">Libros</string>
+    <string name="title_activity_main">Books</string>
 
     <!--Pantalla de home  -->
-    <string name="libro">Ingrese el nombre del libro</string>
-    <string name="buscar_libro">Buscar</string>
+    <string name="libro">Book Name</string>
+    <string name="buscar_libro">Search</string>
 
     <!--Pantalla de ubicacion  -->
-    <string name="actualizar_ubicacion">Actualizar Ubicación</string>
+    <string name="actualizar_ubicacion">Update Location</string>
 
     <!--Nombre de los Fragment  -->
     <string name="menu_home">Home</string>
     <string name="fragment_principal">Red de libros</string>
-    <string name="fragment_busqueda_libro">Buscar libro </string>
-    <string name="fragment_mis_libros">Mis libros</string>
-    <string name="fragment_mis_deseos">Mis deseos</string>
-    <string name="fragment_mi_cuenta">Mi cuenta</string>
-    <string name="fragment_detail">Más información</string>
+    <string name="fragment_busqueda_libro">Search Book</string>
+    <string name="fragment_mis_libros">My Books</string>
+    <string name="fragment_mis_deseos">My Wishes</string>
+    <string name="fragment_mi_cuenta">My Account</string>
+    <string name="fragment_detail">More Information</string>
 
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="quiero">I Want It</string>
+    <string name="tengo">I Got It</string>
 
-
-    <string name="presentacion_usuarios">Debajo vas a encontrar los usuarios que tienen el libro que queres</string>
+    <string name="presentacion_usuarios">Below you will find the users who have the book you want</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
