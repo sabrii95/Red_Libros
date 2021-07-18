@@ -13,41 +13,6 @@ import com.google.firebase.messaging.ktx.messaging
 class QueryFirestore {
     val db = FirebaseFirestore.getInstance()
 
-    /*fun addUserBook(libro: VolumeInfo, email: String, array: String) {
-        if (libro.id != "" && email!= "") {
-             this.seearchBookDataBase(libro)
-                 .addOnSuccessListener { Elementolibro->
-                if(Elementolibro.documents.size > 0) {
-                    this.bookforUser(email, array, libro.id).addOnCompleteListener { documento ->
-                        if(documento.result.documents.isEmpty() ){
-                            if(array != "userDeseo"){
-                                Firebase.messaging.subscribeToTopic(libro.id)
-                            }
-                            db.collection("Libros").document(libro.id)
-                                .update(array, FieldValue.arrayUnion(email))
-                        }
-                        else{
-                            if(array != "userDeseo"){
-                                Firebase.messaging.unsubscribeFromTopic(libro.id)
-                            }
-                            this.removeUser(libro, email, array)
-                        }
-                        //this.removeUser(libro, email, array)
-                    }
-
-                }
-                else{
-
-                    saveBookDataBase(libro, email, array )
-
-                }
-            }
-
-        }
-
-
-    }*/
-
     fun addUserBook(libro: VolumeInfo, email: String, array: String, contexto: Context) {
         if (libro.id != "" && email!= "") {
             this.seearchBookDataBase(libro)

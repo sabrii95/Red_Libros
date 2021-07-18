@@ -47,7 +47,6 @@ class Detail_fragment : Fragment() {
         visible = arguments?.getBoolean("mostrar_contenido")!!
         array = arguments?.getString("array").toString()
 
-
     }
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -142,31 +141,33 @@ class Detail_fragment : Fragment() {
     }
 
     fun sendNotificacion(topic: String, title: String){
-        val service = NotificationApi().getRetrofit().create(ApiNotification::class.java)
-        val call = service.sendNotification(topic,title).enqueue(object : Callback<Notification> {
-            override fun onResponse(call: Call<Notification>, response: Response<Notification>) {
-                println("Hola soy la respuesta $response")
-                Toast.makeText(
-                    context,
-                    "Se envio notificacion",
-                    Toast.LENGTH_SHORT
-                ).show()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val emailPref = prefs.getString("email", "")
+        QueryFirestore().bookforUser(emailPref.toString(),"usersPerteneciente",id)
+            .addOnSuccessListener {
+                val service = NotificationApi().getRetrofit().create(ApiNotification::class.java)
+                val call = service.sendNotification(topic,title).enqueue(object :
+                    Callback<Notification> {
+                    override fun onResponse(call: Call<Notification>, response: Response<Notification>) {
+                        println("Hola soy la respuesta $response")
+                        Toast.makeText(
+                            context,
+                            "Se envio notificacion",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    override fun onFailure(call: Call<Notification>, t: Throwable) {
+                        println(t)
+                        Toast.makeText(
+                            context,
+                            "No se pudo enviar notificacion",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                })
             }
-
-            override fun onFailure(call: Call<Notification>, t: Throwable) {
-                println(t)
-                Toast.makeText(
-                    context,
-                    "No se pudo enviar notificacion",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-
-
-
-
-        })
 
     }
 

@@ -16,7 +16,6 @@ import com.example.redlibros.Model.BookResponse
 import com.example.redlibros.Servicio.ApiBooks
 import com.example.redlibros.Servicio.CallApiBook
 import com.example.redlibros.databinding.FragmentBuscarLibroQrBinding
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.integration.android.IntentIntegrator
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,7 +24,6 @@ import retrofit2.Callback
 
 class FragmentBuscar_Libro_qr : Fragment() {
 
-    private val db = FirebaseFirestore.getInstance()
     private var book: BookResponse ? = null
     private var _binding: FragmentBuscarLibroQrBinding? = null
     private val binding get() = _binding!!
@@ -41,8 +39,6 @@ class FragmentBuscar_Libro_qr : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
-
         _binding = FragmentBuscarLibroQrBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -85,11 +81,11 @@ class FragmentBuscar_Libro_qr : Fragment() {
         if (result != null){
             if(result.contents != null ){
                 this.searchBook(result.contents)
-
-
             }
             else{
-                binding.txtTituloLibro.setText("Cancelado")
+                binding.constrainInfoLibro.setVisibility(View.VISIBLE)
+                binding.btnLibroDeseado.setVisibility(View.GONE)
+                binding.btnGuardarLibro.setVisibility(View.GONE)
                 Toast.makeText(context, "Cancelado", Toast.LENGTH_LONG).show()
 
             }
@@ -137,6 +133,7 @@ class FragmentBuscar_Libro_qr : Fragment() {
             }
 
             override fun onFailure(call: Call<BookResponse>, t: Throwable) {
+
                 Toast.makeText(
                     context,
                     "No se encontro libro",
