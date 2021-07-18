@@ -66,20 +66,20 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lo quiero"
+                android:text="@string/quiero"
                 android:id="@+id/btnDeseo"
                 android:layout_marginLeft="5dp"
                 android:layout_below="@id/authorTextView"
                 android:layout_toEndOf="@id/posterCardView"/>
 
             <Button
+                android:id="@+id/btnTengo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lo tengo"
-                android:id="@+id/btnTengo"
-                android:layout_marginLeft="5dp"
                 android:layout_below="@id/authorTextView"
-                android:layout_toEndOf="@id/btnDeseo" />
+                android:layout_marginLeft="5dp"
+                android:layout_toEndOf="@id/btnDeseo"
+                android:text="@string/tengo" />
 
             <Button
                 android:id="@+id/btn_quitar"
@@ -92,7 +92,7 @@
                 android:layout_marginTop="61dp"
                 android:layout_toEndOf="@id/posterCardView"
                 android:gravity="center_horizontal"
-                android:text="Quitar" />
+                android:text="@string/quitar" />
 
             <ScrollView
                 android:id="@+id/scrollView"
