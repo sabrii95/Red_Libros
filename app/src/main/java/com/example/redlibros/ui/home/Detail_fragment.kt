@@ -81,7 +81,7 @@ class Detail_fragment : Fragment() {
 
             if(usersPerteneciente.size > 0) {
                 binding.subtitulo.visibility = View.VISIBLE
-                binding.scrollView.layoutParams.height = 350
+           //     binding.scrollView.layoutParams.height = 350
             }
 
             val userAdapter = MatchSubItem(usersPerteneciente)
@@ -95,6 +95,7 @@ class Detail_fragment : Fragment() {
 
       
         if(visible == false){
+
             binding.btnDeseo.setVisibility(View.GONE)
             binding.btnTengo.setVisibility(View.GONE)
             binding.btnQuitar.setVisibility(View.VISIBLE)

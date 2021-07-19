@@ -81,6 +81,7 @@ class FragmentBuscar_Libro_qr : Fragment() {
         if (result != null){
             if(result.contents != null ){
                 this.searchBook(result.contents)
+
             }
             else{
                 binding.constrainInfoLibro.setVisibility(View.VISIBLE)
