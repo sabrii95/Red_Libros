@@ -1,12 +1,10 @@
 package com.example.redlibros
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
@@ -30,7 +28,6 @@ import com.google.android.gms.location.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -47,18 +44,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var latitud: Double = 0.0
     var longitude: Double = 0.0
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
-
 
         drawerLayout = binding.drawerLayout
 
@@ -70,9 +62,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
-
-
-
 
         val navView: NavigationView = binding.navView
         navView.setNavigationItemSelectedListener {
@@ -106,10 +95,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .into(image)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-
         checLocationpermission()
-
-
 
     }
 
@@ -285,16 +271,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             interval = 3000
             fastestInterval = 5000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-    }
-
-    private fun startLocationUpdates() {
-        if (checkPermission()) {
-            fusedLocationClient.requestLocationUpdates(
-                locationRequest,
-                locationCallback,
-                Looper.getMainLooper()
-            )
         }
     }
 

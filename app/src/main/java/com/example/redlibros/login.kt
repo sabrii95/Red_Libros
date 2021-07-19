@@ -74,13 +74,26 @@ class login : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnLoguear.setOnClickListener{
-            binding.btnLoguear.setEnabled(false)
-            binding.btnLoginGoogle.setEnabled(false)
-            binding.btnRegistro.setEnabled(false)
-            binding.edtPass.setEnabled(false)
-            binding.edtUser.setEnabled(false)
-            userdata = User(usuarioid.text.toString(), true, "", "",contraid.text.toString())
-            this.loguear(userdata)
+            if(usuarioid.text.toString().equals("") || usuarioid.text.toString().equals(null)){
+                Toast.makeText(
+                    this,
+                    "Debe completar los datos antes de continuar",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+
+            }
+            else{
+                binding.btnLoguear.setEnabled(false)
+                binding.btnLoginGoogle.setEnabled(false)
+                binding.btnRegistro.setEnabled(false)
+                binding.edtPass.setEnabled(false)
+                binding.edtUser.setEnabled(false)
+                userdata = User(usuarioid.text.toString().trim(), true, "", "",contraid.text.toString())
+                this.loguear(userdata)
+            }
+
+
 
         }
         binding.btnLoginGoogle.setOnClickListener{
@@ -164,6 +177,11 @@ class login : AppCompatActivity() {
                                     "Authentication failed.",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                binding.btnLoguear.setEnabled(true)
+                                binding.btnLoginGoogle.setEnabled(true)
+                                binding.btnRegistro.setEnabled(true)
+                                binding.edtPass.setEnabled(true)
+                                binding.edtUser.setEnabled(true)
                             }
                         }
 
@@ -198,6 +216,11 @@ class login : AppCompatActivity() {
                             "Resgistro failed.",
                             Toast.LENGTH_SHORT
                         ).show()
+                        binding.edtPass.setEnabled(true)
+                        binding.edtUser.setEnabled(true)
+                        binding.btnLoguear.setEnabled(true)
+                        binding.btnLoginGoogle.setEnabled(true)
+                        binding.btnLoguear.setEnabled(true)
 
 
                     }
@@ -226,18 +249,18 @@ class login : AppCompatActivity() {
                 val user = FirebaseAuth.getInstance().currentUser
                 var userRef = db.collection("User").document(user?.email.toString()).get()
                     .addOnSuccessListener { document ->
-                        val dataUser = User(user?.email.toString(),
+                       /* val dataUser = User(
+                            user?.email.toString(),
                             true,
                             user?.photoUrl.toString(),
                             user!!.displayName.toString(),
                             "",
                             "",
                             document.data?.get("latitud").toString(),
-                            document.data?.get("longitud").toString())
-                        ingresarUser(dataUser)
+                            document.data?.get("longitud").toString())*/
+                        //ingresarUser(dataUser)
                         val intent = Intent(this, MainActivity::class.java)
                         val datosusuario = prefs.edit()
-
                         datosusuario.putString("username", user!!.displayName)
                         datosusuario.putString("image", user.photoUrl.toString())
                         datosusuario.putString("email", user.email)
