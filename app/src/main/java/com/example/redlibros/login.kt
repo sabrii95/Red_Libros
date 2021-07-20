@@ -162,40 +162,67 @@ class login : AppCompatActivity() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         if(user.email!= "" || user.pass != "") {
             var userRef = db.collection("User").document(user.email).get()
-                .addOnSuccessListener { document ->
-                    auth.signInWithEmailAndPassword(user.email, user.pass)
-                        .addOnCompleteListener(this) { task ->
-                            if (task.isSuccessful) {
-                                val intent = Intent(this, MainActivity::class.java)
-                                    document.id
+                .addOnCompleteListener { document ->
+                    if(document.result.data?.get("enable") == false) {
+                        Toast.makeText(
+                            baseContext,
+                            "El usuario se encuentra dado de baja ",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        binding.edtPass.setEnabled(true)
+                        binding.edtUser.setEnabled(true)
+                        binding.btnLoguear.setEnabled(true)
+                        binding.btnLoginGoogle.setEnabled(true)
+                        binding.btnLoguear.setEnabled(true)
+
+                    }
+                    else {
+                        auth.signInWithEmailAndPassword(user.email, user.pass)
+                            .addOnCompleteListener(this) { task ->
+                                if (task.isSuccessful) {
+                                    val intent = Intent(this, MainActivity::class.java)
+
                                     val datosusuario = prefs.edit()
-                                    datosusuario.putString("username", document.data?.get("userName").toString())
-                                    datosusuario.putString("image", document.data?.get("image").toString() )
+                                    datosusuario.putString(
+                                        "username",
+                                        document.result.data?.get("userName").toString()
+                                    )
+                                    datosusuario.putString(
+                                        "image",
+                                        document.result.data?.get("image").toString()
+                                    )
                                     datosusuario.putString("email", user.email)
                                     datosusuario.putString("pass", user.pass)
-                                    datosusuario.putString("latitud", document.data?.get("latitud")?.toString())
-                                    datosusuario.putString("longitud",document.data?.get("longitud")?.toString())
-                                    datosusuario.putString("provider", "Basic" )
+                                    datosusuario.putString(
+                                        "latitud",
+                                        document.result.data?.get("latitud")?.toString()
+                                    )
+                                    datosusuario.putString(
+                                        "longitud",
+                                        document.result.data?.get("longitud")?.toString()
+                                    )
+                                    datosusuario.putString("provider", "Basic")
                                     datosusuario.apply()
 
 
-                                startActivity(intent)
-                                finish()
+                                    startActivity(intent)
+                                    finish()
 
 
-                            } else {
-                                Toast.makeText(
-                                    baseContext,
-                                    "Authentication failed.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                binding.btnLoguear.setEnabled(true)
-                                binding.btnLoginGoogle.setEnabled(true)
-                                binding.btnRegistro.setEnabled(true)
-                                binding.edtPass.setEnabled(true)
-                                binding.edtUser.setEnabled(true)
+                                } else {
+                                    Toast.makeText(
+                                        baseContext,
+                                        "Authentication failed.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    binding.btnLoguear.setEnabled(true)
+                                    binding.btnLoginGoogle.setEnabled(true)
+                                    binding.btnRegistro.setEnabled(true)
+                                    binding.edtPass.setEnabled(true)
+                                    binding.edtUser.setEnabled(true)
+                                }
                             }
-                        }
+                    }
 
 
                 }
@@ -209,6 +236,7 @@ class login : AppCompatActivity() {
             auth.createUserWithEmailAndPassword(user.email, user.pass)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
+
                         //val datosUser = auth.currentUser
                         this.ingresarUser(user)
                         val intent = Intent(this, MainActivity::class.java).apply {
@@ -260,30 +288,64 @@ class login : AppCompatActivity() {
                 val prefs = PreferenceManager.getDefaultSharedPreferences(this)
                 val user = FirebaseAuth.getInstance().currentUser
                 var userRef = db.collection("User").document(user?.email.toString()).get()
-                    .addOnSuccessListener { document ->
-                       /* val dataUser = User(
-                            user?.email.toString(),
-                            true,
-                            user?.photoUrl.toString(),
-                            user!!.displayName.toString(),
-                            "",
-                            "",
-                            document.data?.get("latitud").toString(),
-                            document.data?.get("longitud").toString())*/
-                        //ingresarUser(dataUser)
-                        val intent = Intent(this, MainActivity::class.java)
-                        val datosusuario = prefs.edit()
-                        datosusuario.putString("username", user!!.displayName)
-                        datosusuario.putString("image", user.photoUrl.toString())
-                        datosusuario.putString("email", user.email)
-                        datosusuario.putString("latitud", document.data?.get("latitud").toString() )
-                        datosusuario.putString("longitud",document.data?.get("longitud").toString() )
-                        datosusuario.putString("provider", "Google" )
+                    .addOnCompleteListener() { document ->
+                        if(document.isSuccessful && document.result.data?.get("email").toString()!= "null"){
+                            if(document.result.data?.get("enable") == false){
+                                Toast.makeText(
+                                    baseContext,
+                                    "El usuario se encuentra dado de baja ",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                binding.edtPass.setEnabled(true)
+                                binding.edtUser.setEnabled(true)
+                                binding.btnLoguear.setEnabled(true)
+                                binding.btnLoginGoogle.setEnabled(true)
+                                binding.btnLoguear.setEnabled(true)
 
-                        datosusuario.apply()
+                            }
+                            else{
+                                val intent = Intent(this, MainActivity::class.java)
+                                val datosusuario = prefs.edit()
+                                datosusuario.putString("username", user!!.displayName)
+                                datosusuario.putString("image", user.photoUrl.toString())
+                                datosusuario.putString("email", user.email)
+                                datosusuario.putString("latitud", document.result.data?.get("latitud").toString() )
+                                datosusuario.putString("longitud",document.result.data?.get("longitud").toString() )
+                                datosusuario.putString("provider", "Google" )
+                                datosusuario.apply()
+                                startActivity(intent)
+                                finishAffinity()
+                            }
 
-                        startActivity(intent)
-                        finishAffinity()
+
+                        }
+                        else{
+                            val dataUser = User(
+                                user?.email.toString(),
+                                true,
+                                user?.photoUrl.toString(),
+                                user!!.displayName.toString(),
+                                "",
+                                "",
+                                "0",
+                                "0")
+                            ingresarUser(dataUser)
+                            val intent = Intent(this, MainActivity::class.java)
+                            val datosusuario = prefs.edit()
+                            datosusuario.putString("username", user!!.displayName)
+                            datosusuario.putString("image", user.photoUrl.toString())
+                            datosusuario.putString("email", user.email)
+                            datosusuario.putString("latitud", document.result.data?.get("latitud").toString() )
+                            datosusuario.putString("longitud",document.result.data?.get("longitud").toString() )
+                            datosusuario.putString("provider", "Google" )
+
+                            datosusuario.apply()
+
+                            startActivity(intent)
+                            finishAffinity()
+
+                        }
+
                     }
 
             }
@@ -293,6 +355,11 @@ class login : AppCompatActivity() {
                     "Authentication failed",
                     Toast.LENGTH_SHORT
                 ).show()
+                binding.edtPass.setEnabled(true)
+                binding.edtUser.setEnabled(true)
+                binding.btnLoguear.setEnabled(true)
+                binding.btnLoginGoogle.setEnabled(true)
+                binding.btnLoguear.setEnabled(true)
 
             }
         }

@@ -154,7 +154,7 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
         if(longituddPrefs == "null" || longituddPrefs == "" || longituddPrefs == null ){
             longituddPrefs = "0"
         }
-        if(latitudPrefs == null || latitudPrefs == "" ){
+        if(latitudPrefs == "null" || latitudPrefs == "" || longituddPrefs == null ){
             latitudPrefs="0"
         }
 
