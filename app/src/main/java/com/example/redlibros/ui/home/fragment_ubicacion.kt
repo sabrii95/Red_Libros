@@ -57,7 +57,7 @@ class fragment_ubicacion : Fragment(), OnMapReadyCallback {
 
             if (checkPermission()) {
                 createLocationRequest()
-                createLocationCallback()
+                //createLocationCallback()
                 fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
 

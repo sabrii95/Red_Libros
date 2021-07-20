@@ -115,15 +115,27 @@ class login : AppCompatActivity() {
 
         }
         binding.btnRegistro.setOnClickListener {
-            binding.edtPass.setEnabled(false)
-            binding.edtUser.setEnabled(false)
-            binding.btnLoguear.setEnabled(false)
-            binding.btnLoginGoogle.setEnabled(false)
-            binding.btnLoguear.setEnabled(false)
-            userdata = User(usuarioid.text.toString(), true, "https://image.flaticon.com/icons/png/512/681/681392.png", "",contraid.text.toString()
-            )
-            this.registroUser(userdata)
+            if (usuarioid.text.toString().equals("") || usuarioid.text.toString().equals(null)) {
+                Toast.makeText(
+                    this,
+                    "Debe completar los datos antes de continuar",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+
+            }
+            else{
+                binding.edtPass.setEnabled(false)
+                binding.edtUser.setEnabled(false)
+                binding.btnLoguear.setEnabled(false)
+                binding.btnLoginGoogle.setEnabled(false)
+                binding.btnLoguear.setEnabled(false)
+                userdata = User(usuarioid.text.toString(), true, "https://image.flaticon.com/icons/png/512/681/681392.png", "",contraid.text.toString()
+                )
+                this.registroUser(userdata)
+            }
         }
+
     }
 
 

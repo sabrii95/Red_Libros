@@ -5,12 +5,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
-import android.widget.*
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.menu.MenuView.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -64,15 +63,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.addDrawerListener(toggle)
 
         val navView: NavigationView = binding.navView
-        navView.setNavigationItemSelectedListener {
+       /* navView.setNavigationItemSelectedListener {
             Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_SHORT).show()
             false
-        }
+        }*/
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(
             setOf(
 
-                R.id.nav_home,R.id.nav_fragmentCount, R.id.nav_BuscarLibroQR, R.id.nav_LibrosDeseos
+                R.id.nav_home,R.id.nav_fragmentCount, R.id.nav_BuscarLibroQR, R.id.nav_LibrosDeseos,
+                R.id.nav_fragmentMisLibros
 
             ), drawerLayout
         )
@@ -99,11 +99,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+  /*  override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu )
         return true
-    }
+    }*/
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -234,7 +234,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 else {
                     Toast.makeText(this, "Permiso cencedido", Toast.LENGTH_SHORT).show()
                     createLocationRequest()
-                    createLocationCallback()
+                    //createLocationCallback()
                     fusedLocationClient.lastLocation
                         .addOnSuccessListener { location: Location? ->
                             if (location != null) {

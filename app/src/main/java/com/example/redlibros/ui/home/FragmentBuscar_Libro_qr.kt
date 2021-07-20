@@ -68,7 +68,7 @@ class FragmentBuscar_Libro_qr : Fragment() {
     private fun initScanner() {
         val integrator = IntentIntegrator.forSupportFragment(this)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
-        integrator.setPrompt("Mensaje al usuario")
+        integrator.setPrompt("Escanee el codigo del libro")
         integrator.setTorchEnabled(true)
         integrator.setBeepEnabled(true)
         integrator.initiateScan()
